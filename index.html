@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HUE</title>
+    <script type="module" src="/src/main.ts" defer></script>
+  </head>
+  <body>
+    <div id="app">
+      <div id="pet-stage">
+        <button id="settings-btn" class="gear hidden" title="Paramètres" type="button">⚙</button>
+        <div id="pet" class="pet">
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <clipPath id="screenClip">
+                <rect x="28" y="34" width="64" height="40" rx="8" />
+              </clipPath>
+            </defs>
+            <rect
+              id="chassis"
+              x="18"
+              y="22"
+              width="84"
+              height="76"
+              rx="18"
+              fill="#2a2f3a"
+              stroke="#3d4555"
+              stroke-width="3"
+            />
+            <rect x="28" y="34" width="64" height="40" rx="8" fill="#0b0d12" />
+            <g id="eyes" clip-path="url(#screenClip)">
+              <ellipse id="eye-l" class="eye" cx="46" cy="54" rx="8" ry="10" fill="#ff8a1f" />
+              <ellipse id="eye-r" class="eye" cx="74" cy="54" rx="8" ry="10" fill="#ff8a1f" />
+            </g>
+            <g id="dizzy-fx" class="dizzy-fx" clip-path="url(#screenClip)" opacity="0" aria-hidden="true">
+              <circle class="dizzy-star" cx="38" cy="40" r="2.2" fill="#ffd27a" />
+              <circle class="dizzy-star" cx="82" cy="42" r="1.8" fill="#ffb347" />
+              <circle class="dizzy-star" cx="60" cy="38" r="1.6" fill="#ffe6a8" />
+              <path
+                class="dizzy-swirl"
+                d="M52 48c6-4 14-2 16 4"
+                fill="none"
+                stroke="#ff8a1f"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                opacity="0.85"
+              />
+              <path
+                class="dizzy-swirl"
+                d="M68 60c-5 4-13 3-16-3"
+                fill="none"
+                stroke="#ffb347"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                opacity="0.7"
+              />
+            </g>
+            <rect x="40" y="88" width="40" height="6" rx="3" fill="#ff8a1f" opacity="0.7" />
+          </svg>
+          <div id="face-display" class="face-display hidden" aria-hidden="true"></div>
+        </div>
+        <div id="bubble" class="bubble hidden"></div>
+        <form id="prompt-form" class="prompt-form hidden">
+          <input
+            id="prompt-input"
+            type="text"
+            placeholder="Parle à HUE…"
+            autocomplete="off"
+            maxlength="500"
+          />
+          <button id="stt-btn" type="button" title="Vocal (bientôt)">🎙</button>
+        </form>
+      </div>
+
+      <div id="settings-modal" class="modal hidden">
+        <div class="modal-card">
+          <header>
+            <h2>Paramètres HUE</h2>
+            <button id="settings-close" type="button">✕</button>
+          </header>
+
+          <label>
+            Fréquence des réflexions
+            <input id="talk-freq" type="range" min="0" max="4" step="1" />
+            <span id="talk-freq-label">Normal</span>
+          </label>
+
+          <label class="row">
+            Mode de déplacement
+            <select id="movement-mode">
+              <option value="fullscreen">Tout l'écran</option>
+              <option value="taskbar">Taskbar</option>
+              <option value="static">Static</option>
+            </select>
+          </label>
+
+          <label class="row">
+            Écran (rangé)
+            <select id="peek-display">
+              <option value="all">Tout</option>
+              <option value="spec_only">Specs only</option>
+              <option value="clock_only">Horloge only</option>
+              <option value="eyes_only">Eyes only</option>
+            </select>
+          </label>
+          <p style="margin:0;font-size:11px;color:#9aa3b5;line-height:1.35">
+            En mode rangé (sans parler) : cycle yeux → horloge → CPU / RAM / disque / GPU…
+          </p>
+
+          <label class="row">
+            <span>Mode discret (plein écran / jeux)</span>
+            <input id="stealth-auto" type="checkbox" />
+          </label>
+          <p style="margin:0;font-size:11px;color:#9aa3b5;line-height:1.35">
+            Activé : HUE se cache seulement en vrai plein écran (vidéo, jeu) ou OBS.
+            Glisse-le dans le coin bas-droit pour le ranger (crâne visible).
+          </p>
+
+          <label class="row">
+            <span>Lancer au démarrage Windows</span>
+            <input id="launch-at-startup" type="checkbox" />
+          </label>
+          <p style="margin:0;font-size:11px;color:#9aa3b5;line-height:1.35">
+            Ajoute HUE au démarrage de ta session Windows (registre utilisateur).
+          </p>
+
+          <fieldset>
+            <legend>LLM</legend>
+            <label class="row">
+              Backend
+              <select id="llm-backend">
+                <option value="api">API distante</option>
+                <option value="local">Local (GGUF)</option>
+              </select>
+            </label>
+            <div id="llm-local-fields" class="llm-fields hidden">
+              <label>
+                Chemin .gguf
+                <input id="gguf-path" type="text" placeholder="C:\models\model.gguf" />
+              </label>
+              <p style="margin:0;font-size:11px;color:#9aa3b5;line-height:1.35">
+                100&nbsp;% local : HUE télécharge <code>llama-server</code> (llama.cpp) une seule fois
+                si besoin, puis lance ton .gguf. Pas besoin de PATH.
+              </p>
+            </div>
+            <div id="llm-api-fields" class="llm-fields">
+              <label>
+                Endpoint API
+                <input id="api-endpoint" type="text" />
+              </label>
+              <label>
+                Clé API
+                <input id="api-key" type="password" />
+              </label>
+              <label>
+                Modèle
+                <input id="api-model" type="text" />
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Animalese</legend>
+            <label class="row">
+              <span>Son animalese</span>
+              <input id="anim-enabled" type="checkbox" checked />
+            </label>
+            <label>
+              Pitch
+              <input id="anim-pitch" type="range" min="0.5" max="2" step="0.05" />
+            </label>
+            <label>
+              Vitesse
+              <input id="anim-speed" type="range" min="0.5" max="2" step="0.05" />
+            </label>
+          </fieldset>
+
+          <details id="dna-panel">
+            <summary>Carte d'identité (Hardware DNA)</summary>
+            <pre id="dna-view">Chargement…</pre>
+          </details>
+
+          <p style="margin:8px 0 0;font-size:11px;color:#9aa3b5;line-height:1.35">
+            Les paramètres sont enregistrés automatiquement à la fermeture.
+          </p>
+          <p
+            id="credit-footer"
+            style="margin:14px 0 0;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:#9aa3b5;text-align:center;letter-spacing:0.02em"
+          >
+            HUE v1.0 — Made by Batpolygon
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
