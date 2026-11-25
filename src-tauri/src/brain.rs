@@ -199,7 +199,8 @@ fn spawn_physics(app: AppHandle) {
                 if let Some(bwin) = app.get_webview_window("bubble") {
                     let (bw, bh) = *state.bubble_size.lock();
                     let win_w = state.body.lock().width.max(PET_WINDOW);
-                    let (bx, by) = place_bubble(payload.x, payload.y, win_w, bw, bh);
+                    let area = state.cached_area.lock().clone();
+                    let (bx, by) = place_bubble(payload.x, payload.y, win_w, bw, bh, &area);
                     let _ = bwin.set_position(PhysicalPosition::new(bx as i32, by as i32));
                 }
             }
@@ -219,6 +220,10 @@ fn spawn_physics(app: AppHandle) {
                         window_util::set_above_all(&win);
                     }
                     last_peeking = Some(payload.peeking);
+                } else if payload.peeking && frame % 15 == 0 {
+                    // Re-assert every ~250 ms: something else in the topmost band (Explorer, the
+                    // bubble, other overlays) can lift him back over the taskbar.
+                    window_util::keep_below_taskbar(&win);
                 }
                 let moved = last_x.is_nan()
                     || last_y.is_nan()

@@ -13,7 +13,7 @@ if not exist "node_modules" (
 
 for /f %%v in ('node -p "require('./package.json').version"') do set "VERSION=%%v"
 for /f %%m in ('node -p "require('./package.json').version.split('.')[0]"') do set "MAJOR=%%m"
-set "FINAL=..\HUE_V%MAJOR%.exe"
+set "FINAL=release\HUE_V%MAJOR%.exe"
 
 tasklist /NH 2>nul | findstr /I /B /L /C:"hue.exe " /C:"HUE_V%MAJOR%.exe " >nul && (
   echo [HUE] HUE.exe ou HUE_V%MAJOR%.exe tourne : ferme-le d'abord

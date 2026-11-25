@@ -3,7 +3,7 @@ use crate::ai::documents::{self, Document};
 use crate::ai::llm::{self, NoTarget};
 use crate::ai::personality::{build_identity, compose_title, IdentityCard};
 use crate::config::HueSettings;
-use crate::physics::{HueState, PhysicsBody, PointerPhase, PET_WINDOW};
+use crate::physics::{HueState, PhysicsBody, PointerPhase, WorkArea, PET_WINDOW};
 use crate::state::{AppState, SETTINGS_SIZE};
 use crate::watcher::HardwareSnapshot;
 use crate::{watcher, window_util};
@@ -301,9 +301,17 @@ fn estimate_bubble_size(text: &str) -> (f64, f64) {
     (bw, bh)
 }
 
-pub fn place_bubble(x: f64, y: f64, win_w: f64, bw: f64, bh: f64) -> (f64, f64) {
-    let bx = x + win_w * 0.5 - bw * 0.5;
-    let by = (y - bh - BUBBLE_GAP).max(0.0);
+const BUBBLE_EDGE: f64 = 6.0;
+
+/// Centered above the pet, but kept inside the pet's own screen (tucked in the bottom-right
+/// corner, a centered bubble would spill onto the next monitor).
+pub fn place_bubble(x: f64, y: f64, win_w: f64, bw: f64, bh: f64, area: &WorkArea) -> (f64, f64) {
+    let min_x = area.x + BUBBLE_EDGE;
+    let max_x = (area.x + area.width - bw - BUBBLE_EDGE).max(min_x);
+    let bx = (x + win_w * 0.5 - bw * 0.5).clamp(min_x, max_x);
+    let min_y = area.y;
+    let max_y = (area.y + area.height - bh).max(min_y);
+    let by = (y - bh - BUBBLE_GAP).clamp(min_y, max_y);
     (bx, by)
 }
 
@@ -322,7 +330,8 @@ pub fn show_speech_bubble(
     };
     let (bw, bh) = estimate_bubble_size(&text);
     *state.bubble_size.lock() = (bw, bh);
-    let (bx, by) = place_bubble(x, y, win_w, bw, bh);
+    let area = state.cached_area.lock().clone();
+    let (bx, by) = place_bubble(x, y, win_w, bw, bh, &area);
     let win = app
         .get_webview_window("bubble")
         .ok_or_else(|| "bubble window missing".to_string())?;
@@ -607,4 +616,30 @@ fn bump_files(state: &AppState) {
     let mut m = state.memory.lock();
     m.stats.files_read += 1;
     m.save_if_needed(false);
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn bubble_stays_on_the_pets_screen() {
+        // Left screen 0..1920, taskbar 48 px; pet tucked in its bottom-right corner.
+        let area = WorkArea { x: 0.0, y: 0.0, width: 1920.0, height: 1032.0 };
+        let (px, py) = PhysicsBody::peek_position(&area, PET_WINDOW, PET_WINDOW);
+        let (bw, bh) = (250.0, 60.0);
+        let (bx, by) = place_bubble(px, py, PET_WINDOW, bw, bh, &area);
+        assert!(bx + bw <= area.x + area.width, "bubble spills right: {bx}+{bw}");
+        assert!(bx >= area.x);
+        assert!(by >= area.y && by + bh <= area.y + area.height);
+
+        // Same on a right-hand screen (negative-free offsets).
+        let right = WorkArea { x: 1920.0, ..area };
+        let (bx, _) = place_bubble(right.x - 40.0, 500.0, PET_WINDOW, bw, bh, &right);
+        assert!(bx >= right.x, "bubble spills left onto the other screen: {bx}");
+
+        // Mid-screen: still centered on the pet.
+        let (bx, _) = place_bubble(800.0, 500.0, PET_WINDOW, bw, bh, &area);
+        assert_eq!(bx, 800.0 + PET_WINDOW * 0.5 - bw * 0.5);
+    }
 }
