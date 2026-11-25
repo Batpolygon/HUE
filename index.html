@@ -12,185 +12,208 @@
       <div id="pet-stage">
         <button id="settings-btn" class="gear hidden" title="Paramètres" type="button">⚙</button>
         <div id="pet" class="pet">
-          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <defs>
-              <clipPath id="screenClip">
-                <rect x="28" y="34" width="64" height="40" rx="8" />
-              </clipPath>
-            </defs>
-            <rect
-              id="chassis"
-              x="18"
-              y="22"
-              width="84"
-              height="76"
-              rx="18"
-              fill="#2a2f3a"
-              stroke="#3d4555"
-              stroke-width="3"
-            />
-            <rect x="28" y="34" width="64" height="40" rx="8" fill="#0b0d12" />
-            <g id="eyes" clip-path="url(#screenClip)">
-              <ellipse id="eye-l" class="eye" cx="46" cy="54" rx="8" ry="10" fill="#ff8a1f" />
-              <ellipse id="eye-r" class="eye" cx="74" cy="54" rx="8" ry="10" fill="#ff8a1f" />
-            </g>
-            <g id="dizzy-fx" class="dizzy-fx" clip-path="url(#screenClip)" opacity="0" aria-hidden="true">
-              <circle class="dizzy-star" cx="38" cy="40" r="2.2" fill="#ffd27a" />
-              <circle class="dizzy-star" cx="82" cy="42" r="1.8" fill="#ffb347" />
-              <circle class="dizzy-star" cx="60" cy="38" r="1.6" fill="#ffe6a8" />
-              <path
-                class="dizzy-swirl"
-                d="M52 48c6-4 14-2 16 4"
-                fill="none"
-                stroke="#ff8a1f"
-                stroke-width="1.6"
-                stroke-linecap="round"
-                opacity="0.85"
-              />
-              <path
-                class="dizzy-swirl"
-                d="M68 60c-5 4-13 3-16-3"
-                fill="none"
-                stroke="#ffb347"
-                stroke-width="1.4"
-                stroke-linecap="round"
-                opacity="0.7"
-              />
-            </g>
-            <rect x="40" y="88" width="40" height="6" rx="3" fill="#ff8a1f" opacity="0.7" />
-          </svg>
           <div id="face-display" class="face-display hidden" aria-hidden="true"></div>
         </div>
-        <div id="bubble" class="bubble hidden"></div>
-        <form id="prompt-form" class="prompt-form hidden">
-          <input
-            id="prompt-input"
-            type="text"
-            placeholder="Parle à HUE…"
-            autocomplete="off"
-            maxlength="500"
-          />
-          <button id="stt-btn" type="button" title="Vocal (bientôt)">🎙</button>
-        </form>
+        <div id="hud" class="hud hidden">
+          <div id="chat-status" class="chat-status hidden"></div>
+          <div id="bubble" class="bubble hidden"></div>
+          <div id="confirm-bar" class="confirm-bar hidden">
+            <span id="confirm-text"></span>
+            <div class="confirm-actions">
+              <button id="confirm-yes" type="button">Oui</button>
+              <button id="confirm-no" type="button">Non</button>
+            </div>
+          </div>
+          <form id="prompt-form" class="prompt-form">
+            <input
+              id="prompt-input"
+              type="text"
+              placeholder="Parle-moi… ou glisse un fichier sur moi"
+              autocomplete="off"
+              maxlength="800"
+            />
+            <button id="stt-btn" type="button" title="Dictée vocale">🎙</button>
+          </form>
+        </div>
       </div>
+      <div id="fx-layer" class="fx-layer" aria-hidden="true"></div>
+      <div id="drop-hint" class="drop-hint hidden">Lâche-le, je le lis !</div>
 
       <div id="settings-modal" class="modal hidden">
         <div class="modal-card">
           <header>
-            <h2>Paramètres HUE</h2>
-            <button id="settings-close" type="button">✕</button>
+            <h2 id="settings-title">Paramètres</h2>
+            <button id="settings-close" type="button" title="Fermer (enregistre)">✕</button>
           </header>
+          <nav class="tabs" id="settings-tabs">
+            <button type="button" data-tab="general" class="active">Général</button>
+            <button type="button" data-tab="you">Toi</button>
+            <button type="button" data-tab="ai">IA</button>
+            <button type="button" data-tab="voice">Voix</button>
+            <button type="button" data-tab="titles">Succès</button>
+            <button type="button" data-tab="identity">Identité</button>
+          </nav>
 
-          <label>
-            Fréquence des réflexions
-            <input id="talk-freq" type="range" min="0" max="4" step="1" />
-            <span id="talk-freq-label">Normal</span>
-          </label>
-
-          <label class="row">
-            Mode de déplacement
-            <select id="movement-mode">
-              <option value="fullscreen">Tout l'écran</option>
-              <option value="taskbar">Taskbar</option>
-              <option value="static">Static</option>
-            </select>
-          </label>
-
-          <label class="row">
-            Écran (rangé)
-            <select id="peek-display">
-              <option value="all">Tout</option>
-              <option value="spec_only">Specs only</option>
-              <option value="clock_only">Horloge only</option>
-              <option value="eyes_only">Eyes only</option>
-            </select>
-          </label>
-          <p style="margin:0;font-size:11px;color:#9aa3b5;line-height:1.35">
-            En mode rangé (sans parler) : cycle yeux → horloge → CPU / RAM / disque / GPU…
-          </p>
-
-          <label class="row">
-            <span>Mode discret (plein écran / jeux)</span>
-            <input id="stealth-auto" type="checkbox" />
-          </label>
-          <p style="margin:0;font-size:11px;color:#9aa3b5;line-height:1.35">
-            Activé : HUE se cache seulement en vrai plein écran (vidéo, jeu) ou OBS.
-            Glisse-le dans le coin bas-droit pour le ranger (crâne visible).
-          </p>
-
-          <label class="row">
-            <span>Lancer au démarrage Windows</span>
-            <input id="launch-at-startup" type="checkbox" />
-          </label>
-          <p style="margin:0;font-size:11px;color:#9aa3b5;line-height:1.35">
-            Ajoute HUE au démarrage de ta session Windows (registre utilisateur).
-          </p>
-
-          <fieldset>
-            <legend>LLM</legend>
+          <section class="tab" data-tab="general">
+            <label>
+              <span class="lbl">Fréquence de parole <b id="talk-freq-label">Normal</b></span>
+              <input id="talk-freq" type="range" min="0" max="4" step="1" />
+            </label>
             <label class="row">
-              Backend
-              <select id="llm-backend">
-                <option value="api">API distante</option>
-                <option value="local">Local (GGUF)</option>
+              <span>Pensées spontanées (LLM)</span>
+              <input id="llm-thoughts" type="checkbox" />
+            </label>
+            <p class="hint">Si un modèle est déjà chargé, il lâche de temps en temps une vraie pensée.</p>
+            <label class="row">
+              <span>Déplacement</span>
+              <select id="movement-mode">
+                <option value="fullscreen">Tout l'écran</option>
+                <option value="taskbar">Sur la barre des tâches</option>
+                <option value="static">Immobile</option>
               </select>
             </label>
-            <div id="llm-local-fields" class="llm-fields hidden">
-              <label>
-                Chemin .gguf
-                <input id="gguf-path" type="text" placeholder="C:\models\model.gguf" />
-              </label>
-              <p style="margin:0;font-size:11px;color:#9aa3b5;line-height:1.35">
-                100&nbsp;% local : HUE télécharge <code>llama-server</code> (llama.cpp) une seule fois
-                si besoin, puis lance ton .gguf. Pas besoin de PATH.
-              </p>
-            </div>
-            <div id="llm-api-fields" class="llm-fields">
-              <label>
-                Endpoint API
-                <input id="api-endpoint" type="text" />
-              </label>
-              <label>
-                Clé API
-                <input id="api-key" type="password" />
-              </label>
-              <label>
-                Modèle
-                <input id="api-model" type="text" />
-              </label>
-            </div>
-          </fieldset>
-
-          <fieldset>
-            <legend>Animalese</legend>
             <label class="row">
-              <span>Son animalese</span>
-              <input id="anim-enabled" type="checkbox" checked />
+              <span>Écran quand il est rangé</span>
+              <select id="peek-display">
+                <option value="all">Tout (yeux, heure, stats)</option>
+                <option value="spec_only">Statistiques</option>
+                <option value="clock_only">Horloge</option>
+                <option value="eyes_only">Yeux seulement</option>
+              </select>
+            </label>
+            <label class="row">
+              <span>Sieste après inactivité</span>
+              <span class="inline">
+                <input id="sleep-after" type="number" min="0" max="120" step="1" />
+                <small>min (0 = jamais)</small>
+              </span>
+            </label>
+            <label class="row">
+              <span>Mode discret (plein écran, jeux, OBS)</span>
+              <input id="stealth-auto" type="checkbox" />
+            </label>
+            <label class="row">
+              <span>Décorations saisonnières</span>
+              <input id="seasonal-decor" type="checkbox" />
+            </label>
+            <label class="row">
+              <span>Particules (cœurs, neige, vapeur…)</span>
+              <input id="particles" type="checkbox" />
+            </label>
+            <label class="row">
+              <span>Lancer au démarrage de Windows</span>
+              <input id="launch-at-startup" type="checkbox" />
+            </label>
+          </section>
+
+          <section class="tab hidden" data-tab="you">
+            <label>
+              <span class="lbl">Ton anniversaire</span>
+              <input id="user-birthday" type="text" placeholder="JJ/MM ou JJ/MM/AAAA" maxlength="10" />
+            </label>
+            <p class="hint">Il te le souhaitera le jour J (et saura ton âge si tu donnes l'année).</p>
+            <label class="row">
+              <span>Partager la fenêtre active avec l'API distante</span>
+              <input id="share-window-title" type="checkbox" />
+            </label>
+            <p class="hint">Désactivé : le titre de ta fenêtre ne quitte jamais ton PC (il reste utilisé en local).</p>
+            <h3>Ce qu'il sait de toi</h3>
+            <ul id="facts-list" class="list"></ul>
+            <div class="btn-row">
+              <button id="clear-conversation" type="button" class="ghost">Oublier la conversation récente</button>
+            </div>
+            <h3>Statistiques</h3>
+            <div id="memory-stats" class="stat-grid"></div>
+          </section>
+
+          <section class="tab hidden" data-tab="ai">
+            <label class="row">
+              <span>Cerveau</span>
+              <select id="llm-backend">
+                <option value="local">Local (fichier GGUF)</option>
+                <option value="api">API distante (compatible OpenAI)</option>
+              </select>
+            </label>
+            <div id="llm-local-fields">
+              <label>
+                <span class="lbl">Chemin du modèle .gguf</span>
+                <input id="gguf-path" type="text" placeholder="C:\models\modele.gguf" />
+              </label>
+              <p class="hint">100 % local : HUE télécharge llama-server (llama.cpp, vérifié SHA-256) une seule fois si besoin.</p>
+            </div>
+            <div id="llm-api-fields">
+              <label><span class="lbl">Adresse de l'API</span><input id="api-endpoint" type="text" /></label>
+              <label><span class="lbl">Clé API</span><input id="api-key" type="password" autocomplete="off" /></label>
+              <p class="hint">Stockée dans le Gestionnaire d'identification Windows, jamais en clair.</p>
+              <label><span class="lbl">Modèle</span><input id="api-model" type="text" /></label>
+            </div>
+            <h3>Dictée vocale (Whisper)</h3>
+            <label class="row">
+              <span>Moteur</span>
+              <select id="stt-engine">
+                <option value="local">Local (whisper.cpp)</option>
+                <option value="api">API distante</option>
+              </select>
+            </label>
+            <label class="row">
+              <span>Modèle local</span>
+              <select id="stt-model">
+                <option value="base">Base (rapide, ~60 Mo)</option>
+                <option value="small">Small (précis, ~180 Mo)</option>
+              </select>
+            </label>
+            <label class="row">
+              <span>Langue</span>
+              <select id="stt-language">
+                <option value="fr">Français</option>
+                <option value="en">Anglais</option>
+                <option value="auto">Détection auto</option>
+              </select>
+            </label>
+            <p class="hint" id="stt-status-line"></p>
+            <h3>Documents lus</h3>
+            <ul id="docs-list" class="list"></ul>
+            <p class="hint">Glisse un fichier sur HUE : il le résume, donne son avis et s'en souvient pour répondre à tes questions.</p>
+          </section>
+
+          <section class="tab hidden" data-tab="voice">
+            <label class="row">
+              <span>Voix animalese</span>
+              <input id="anim-enabled" type="checkbox" />
             </label>
             <label>
-              Pitch
+              <span class="lbl">Hauteur <b id="anim-pitch-label"></b></span>
               <input id="anim-pitch" type="range" min="0.5" max="2" step="0.05" />
             </label>
             <label>
-              Vitesse
+              <span class="lbl">Débit <b id="anim-speed-label"></b></span>
               <input id="anim-speed" type="range" min="0.5" max="2" step="0.05" />
             </label>
-          </fieldset>
+            <p class="hint" id="voice-hint"></p>
+            <div class="btn-row">
+              <button id="voice-test" type="button" class="ghost">Tester la voix</button>
+            </div>
+          </section>
 
-          <details id="dna-panel">
-            <summary>Carte d'identité (Hardware DNA)</summary>
-            <pre id="dna-view">Chargement…</pre>
-          </details>
+          <section class="tab hidden" data-tab="titles">
+            <div class="title-preview" id="title-preview"></div>
+            <label class="row">
+              <span>Préfixe</span>
+              <select id="title-prefix"></select>
+            </label>
+            <label class="row">
+              <span>Suffixe</span>
+              <select id="title-suffix"></select>
+            </label>
+            <p class="hint" id="ach-count"></p>
+            <ul id="ach-list" class="ach-list"></ul>
+          </section>
 
-          <p style="margin:8px 0 0;font-size:11px;color:#9aa3b5;line-height:1.35">
-            Les paramètres sont enregistrés automatiquement à la fermeture.
-          </p>
-          <p
-            id="credit-footer"
-            style="margin:14px 0 0;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:#9aa3b5;text-align:center;letter-spacing:0.02em"
-          >
-            HUE v1.0 — Made by Batpolygon
-          </p>
+          <section class="tab hidden" data-tab="identity">
+            <div id="identity-card" class="identity-card">Chargement…</div>
+          </section>
+
+          <footer class="credit">HUE v2.0 — Made by Batpolygon</footer>
         </div>
       </div>
     </div>

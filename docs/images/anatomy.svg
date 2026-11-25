@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="540" viewBox="0 0 1280 540">
+<style>
+  text { font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
+  .eye { transform-box: fill-box; transform-origin: 50% 50%; animation: blink 5.2s ease-in-out infinite; }
+  .led { animation: led 3.2s ease-in-out infinite; }
+  @keyframes blink { 0%, 90%, 100% { transform: scale(1, 1); } 93%, 95% { transform: scale(1, 0.15); } }
+  @keyframes led { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+</style>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0d1118"/><stop offset="1" stop-color="#161d2b"/></linearGradient>
+  <filter id="ds" x="-25%" y="-25%" width="150%" height="160%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.45"/></filter>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="18"/></filter>
+  
+</defs>
+<rect x="1" y="1" width="1278" height="538" rx="22" fill="url(#bg)" stroke="#263042" stroke-width="2"/>
+
+  <text x="640" y="62" text-anchor="middle" font-size="26" font-weight="700" fill="#f2f4f8">Comment ton matériel dessine sa coque</text>
+  <text x="640" y="92" text-anchor="middle" font-size="16" fill="#8a95a8">Exemple : une tour avec un GPU NVIDIA de 16 Go, 3 écrans et un SSD NVMe</text>
+  <svg x="490" y="110" width="300" height="300.0" viewBox="0 0 120 120" overflow="visible"><g filter="url(#ds)">
+  <defs>
+    <linearGradient id="bodyGrad-11" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2f3a"/>
+      <stop offset="1" stop-color="#1d2129"/>
+    </linearGradient>
+    <clipPath id="bodyClip-11"><rect x="21.5" y="10.0" width="77.0" height="94.0" rx="10.0"/></clipPath>
+    <clipPath id="screenClip-11"><rect x="28" y="34" width="64" height="40" rx="8"/></clipPath>
+  </defs>
+  <g id="rig-11">
+  <g id="shell-11">
+    <rect x="17.519999999999996" y="34" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="96.48" y="34" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="17.519999999999996" y="43" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="96.48" y="43" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="17.519999999999996" y="52" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="96.48" y="52" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="17.519999999999996" y="61" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="96.48" y="61" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="17.519999999999996" y="70" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="96.48" y="70" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="17.519999999999996" y="79" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="96.48" y="79" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="17.519999999999996" y="88" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="96.48" y="88" width="6" height="4.5" rx="1.5" fill="#1d2129"/>
+    
+    <g fill="#1d2129"><rect x="30.5" y="103.0" width="14.0" height="5.0" rx="2.0"/><rect x="75.5" y="103.0" width="14.0" height="5.0" rx="2.0"/></g>
+    <rect x="21.5" y="10.0" width="77.0" height="94.0" rx="10.0" fill="url(#bodyGrad-11)" stroke="#3d4555" stroke-width="2.6"/>
+    <g clip-path="url(#bodyClip-11)" opacity="0.2"><line x1="0" y1="0" x2="0" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="0" x2="120" y2="0" stroke="#3d4555" stroke-width="0.8"/><line x1="10" y1="0" x2="10" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="10" x2="120" y2="10" stroke="#3d4555" stroke-width="0.8"/><line x1="20" y1="0" x2="20" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="20" x2="120" y2="20" stroke="#3d4555" stroke-width="0.8"/><line x1="30" y1="0" x2="30" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="30" x2="120" y2="30" stroke="#3d4555" stroke-width="0.8"/><line x1="40" y1="0" x2="40" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="40" x2="120" y2="40" stroke="#3d4555" stroke-width="0.8"/><line x1="50" y1="0" x2="50" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="50" x2="120" y2="50" stroke="#3d4555" stroke-width="0.8"/><line x1="60" y1="0" x2="60" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="60" x2="120" y2="60" stroke="#3d4555" stroke-width="0.8"/><line x1="70" y1="0" x2="70" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="70" x2="120" y2="70" stroke="#3d4555" stroke-width="0.8"/><line x1="80" y1="0" x2="80" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="80" x2="120" y2="80" stroke="#3d4555" stroke-width="0.8"/><line x1="90" y1="0" x2="90" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="90" x2="120" y2="90" stroke="#3d4555" stroke-width="0.8"/><line x1="100" y1="0" x2="100" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="100" x2="120" y2="100" stroke="#3d4555" stroke-width="0.8"/><line x1="110" y1="0" x2="110" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="110" x2="120" y2="110" stroke="#3d4555" stroke-width="0.8"/></g>
+    <rect x="26.519999999999996" y="30" width="2.6" height="66" rx="1.3" fill="#76b900" class="accent-strip"/><circle cx="87.48" cy="20" r="3.4" fill="none" stroke="#76b900" stroke-width="1.6"/><line x1="87.48" y1="16.8" x2="87.48" y2="19.6" stroke="#76b900" stroke-width="1.6" stroke-linecap="round"/><line x1="39.0" y1="82" x2="39.0" y2="94" stroke="#1d2129" stroke-width="1.6" stroke-linecap="round"/><line x1="45.0" y1="82" x2="45.0" y2="94" stroke="#1d2129" stroke-width="1.6" stroke-linecap="round"/><line x1="51.0" y1="82" x2="51.0" y2="94" stroke="#1d2129" stroke-width="1.6" stroke-linecap="round"/><line x1="57.0" y1="82" x2="57.0" y2="94" stroke="#1d2129" stroke-width="1.6" stroke-linecap="round"/><line x1="63.0" y1="82" x2="63.0" y2="94" stroke="#1d2129" stroke-width="1.6" stroke-linecap="round"/><line x1="69.0" y1="82" x2="69.0" y2="94" stroke="#1d2129" stroke-width="1.6" stroke-linecap="round"/><line x1="75.0" y1="82" x2="75.0" y2="94" stroke="#1d2129" stroke-width="1.6" stroke-linecap="round"/><line x1="81.0" y1="82" x2="81.0" y2="94" stroke="#1d2129" stroke-width="1.6" stroke-linecap="round"/><circle class="led" style="animation-delay:0.0s" cx="34.5" cy="20" r="1.4" fill="#76b900"/><circle class="led" style="animation-delay:0.7s" cx="39.5" cy="20" r="1.4" fill="#76b900"/><circle class="led" style="animation-delay:1.4s" cx="44.5" cy="20" r="1.4" fill="#76b900"/>
+    <rect x="26" y="32" width="68" height="44" rx="9.5" fill="#1d2129"/>
+  </g>
+  <rect x="28" y="34" width="64" height="40" rx="8" fill="#0b0d12"/>
+  <g id="eyes-11" clip-path="url(#screenClip-11)">
+    <g id="eyes-normal-11">
+      <ellipse id="eye-l-11" class="eye" cx="46" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+      <ellipse id="eye-r-11" class="eye" cx="74" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+    </g>
+    
+    
+    
+    
+    
+    
+    
+    
+    <g id="blush-11" opacity="0">
+      <ellipse cx="36" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+      <ellipse cx="84" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+    </g>
+  </g>
+  <rect x="30" y="35.5" width="22" height="3" rx="1.5" fill="#ffffff" opacity="0.06" pointer-events="none"/>
+  
+  <g id="decor-11"></g>
+  </g>
+</g></svg>
+  <path d="M541.3 202.5 L420 150" stroke="#8a95a8" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+    <circle cx="541.3" cy="202.5" r="5" fill="#ff8a1f" stroke="#0d1118" stroke-width="2"/>
+    <circle cx="420" cy="150" r="3" fill="#8a95a8"/>
+    <text x="406" y="146" text-anchor="end" font-size="17" font-weight="700" fill="#f2f4f8">Ailettes latérales</text>
+    <text x="406" y="168" text-anchor="end" font-size="14.5" fill="#8a95a8">carte graphique avec 8 Go de VRAM ou plus</text>
+  <path d="M559.5 325.0 L420 270" stroke="#8a95a8" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+    <circle cx="559.5" cy="325.0" r="5" fill="#ff8a1f" stroke="#0d1118" stroke-width="2"/>
+    <circle cx="420" cy="270" r="3" fill="#8a95a8"/>
+    <text x="406" y="266" text-anchor="end" font-size="17" font-weight="700" fill="#f2f4f8">Couleur d'accent</text>
+    <text x="406" y="288" text-anchor="end" font-size="14.5" fill="#8a95a8">marque du GPU : vert NVIDIA, rouge AMD, bleu Intel</text>
+  <path d="M590.0 375.0 L420 390" stroke="#8a95a8" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+    <circle cx="590.0" cy="375.0" r="5" fill="#ff8a1f" stroke="#0d1118" stroke-width="2"/>
+    <circle cx="420" cy="390" r="3" fill="#8a95a8"/>
+    <text x="406" y="386" text-anchor="end" font-size="17" font-weight="700" fill="#f2f4f8">Pieds et palette</text>
+    <text x="406" y="408" text-anchor="end" font-size="14.5" fill="#8a95a8">choisis par la « graine » unique du PC</text>
+  <path d="M588.8 160.0 L860 135" stroke="#8a95a8" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+    <circle cx="588.8" cy="160.0" r="5" fill="#ff8a1f" stroke="#0d1118" stroke-width="2"/>
+    <circle cx="860" cy="135" r="3" fill="#8a95a8"/>
+    <text x="874" y="131" text-anchor="start" font-size="17" font-weight="700" fill="#f2f4f8">LED</text>
+    <text x="874" y="153" text-anchor="start" font-size="14.5" fill="#8a95a8">1 par écran (max 3) + 1 si SSD NVMe</text>
+  <path d="M675.0 245.0 L860 230" stroke="#8a95a8" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+    <circle cx="675.0" cy="245.0" r="5" fill="#ff8a1f" stroke="#0d1118" stroke-width="2"/>
+    <circle cx="860" cy="230" r="3" fill="#8a95a8"/>
+    <text x="874" y="226" text-anchor="start" font-size="17" font-weight="700" fill="#f2f4f8">Écran noir + yeux orange</text>
+    <text x="874" y="248" text-anchor="start" font-size="14.5" fill="#8a95a8">identiques sur tous les PC : c'est toujours HUE</text>
+  <path d="M718.7 320.0 L860 325" stroke="#8a95a8" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+    <circle cx="718.7" cy="320.0" r="5" fill="#ff8a1f" stroke="#0d1118" stroke-width="2"/>
+    <circle cx="860" cy="325" r="3" fill="#8a95a8"/>
+    <text x="874" y="321" text-anchor="start" font-size="17" font-weight="700" fill="#f2f4f8">Motif du panneau</text>
+    <text x="874" y="343" text-anchor="start" font-size="14.5" fill="#8a95a8">grille, rayures, points, circuit… (GPU gaming = plus chargé)</text>
+  <path d="M640.0 340.0 L860 420" stroke="#8a95a8" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+    <circle cx="640.0" cy="340.0" r="5" fill="#ff8a1f" stroke="#0d1118" stroke-width="2"/>
+    <circle cx="860" cy="420" r="3" fill="#8a95a8"/>
+    <text x="874" y="416" text-anchor="start" font-size="17" font-weight="700" fill="#f2f4f8">Aérations</text>
+    <text x="874" y="438" text-anchor="start" font-size="14.5" fill="#8a95a8">une par paire de cœurs CPU</text>
+  <rect x="200" y="470" width="880" height="44" rx="12" fill="#161c28" stroke="#263042"/>
+  <text x="640" y="498" text-anchor="middle" font-size="15.5" fill="#c3cad6"><tspan font-weight="700" fill="#f2f4f8">Forme</tspan> ← type de machine   ·   <tspan font-weight="700" fill="#f2f4f8">Largeur</tspan> ← quantité de RAM   ·   <tspan font-weight="700" fill="#f2f4f8">Coins</tspan> ← graine du PC</text>
+  
+</svg>

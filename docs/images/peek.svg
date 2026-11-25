@@ -1,0 +1,274 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320">
+<style>
+  text { font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
+  .eye { transform-box: fill-box; transform-origin: 50% 50%; animation: blink 5.2s ease-in-out infinite; }
+  .led { animation: led 3.2s ease-in-out infinite; }
+  @keyframes blink { 0%, 90%, 100% { transform: scale(1, 1); } 93%, 95% { transform: scale(1, 0.15); } }
+  @keyframes led { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+</style>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0d1118"/><stop offset="1" stop-color="#161d2b"/></linearGradient>
+  <filter id="ds" x="-25%" y="-25%" width="150%" height="160%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.45"/></filter>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="18"/></filter>
+  
+</defs>
+<rect x="1" y="1" width="1278" height="318" rx="22" fill="url(#bg)" stroke="#263042" stroke-width="2"/>
+
+  <text x="640" y="52" text-anchor="middle" font-size="24" font-weight="700" fill="#f2f4f8">Rangé dans le coin, son écran fait défiler l'heure, les stats et son humeur</text>
+  <svg x="60" y="120" width="150" height="150.0" viewBox="0 0 120 120" overflow="visible"><g filter="url(#ds)">
+  <defs>
+    <linearGradient id="bodyGrad-23" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2f3a"/>
+      <stop offset="1" stop-color="#1d2129"/>
+    </linearGradient>
+    <clipPath id="bodyClip-23"><rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0"/></clipPath>
+    <clipPath id="screenClip-23"><rect x="28" y="34" width="64" height="40" rx="8"/></clipPath>
+  </defs>
+  <g id="rig-23">
+  <g id="shell-23">
+    
+    
+    <g fill="#1d2129"><rect x="27.0" y="97.0" width="14.0" height="5.0" rx="2.0"/><rect x="79.0" y="97.0" width="14.0" height="5.0" rx="2.0"/></g>
+    <rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0" fill="url(#bodyGrad-23)" stroke="#3d4555" stroke-width="2.6"/>
+    <g clip-path="url(#bodyClip-23)" opacity="0.2"></g>
+    <line x1="30" y1="81.0" x2="46" y2="81.0" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="84.2" x2="46" y2="84.2" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="87.4" x2="46" y2="87.4" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="90.6" x2="46" y2="90.6" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><rect x="78" y="84" width="12" height="2.6" rx="1.3" fill="#ff8a1f" class="accent-strip"/><circle class="led" style="animation-delay:0.0s" cx="80.0" cy="91" r="1.4" fill="#ff8a1f"/>
+    <rect x="26" y="32" width="68" height="44" rx="9.5" fill="#1d2129"/>
+  </g>
+  <rect x="28" y="34" width="64" height="40" rx="8" fill="#0b0d12"/>
+  <g id="eyes-23" opacity="0" clip-path="url(#screenClip-23)">
+    <g id="eyes-normal-23">
+      <ellipse id="eye-l-23" class="eye" cx="46" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+      <ellipse id="eye-r-23" class="eye" cx="74" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+    </g>
+    
+    
+    
+    
+    
+    
+    
+    
+    <g id="blush-23" opacity="0">
+      <ellipse cx="36" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+      <ellipse cx="84" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+    </g>
+  </g>
+  <rect x="30" y="35.5" width="22" height="3" rx="1.5" fill="#ffffff" opacity="0.06" pointer-events="none"/>
+  
+  <text x="60" y="58.5" text-anchor="middle" fill="#ff8a1f" font-family="'Segoe UI', 'Segoe UI Symbol', 'Yu Gothic', 'Helvetica Neue', Arial, sans-serif" font-size="12.2" font-weight="700" letter-spacing="0.5">14:32</text><g id="decor-23"></g>
+  </g>
+</g></svg><svg x="256" y="120" width="150" height="150.0" viewBox="0 0 120 120" overflow="visible"><g filter="url(#ds)">
+  <defs>
+    <linearGradient id="bodyGrad-24" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2f3a"/>
+      <stop offset="1" stop-color="#1d2129"/>
+    </linearGradient>
+    <clipPath id="bodyClip-24"><rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0"/></clipPath>
+    <clipPath id="screenClip-24"><rect x="28" y="34" width="64" height="40" rx="8"/></clipPath>
+  </defs>
+  <g id="rig-24">
+  <g id="shell-24">
+    
+    
+    <g fill="#1d2129"><rect x="27.0" y="97.0" width="14.0" height="5.0" rx="2.0"/><rect x="79.0" y="97.0" width="14.0" height="5.0" rx="2.0"/></g>
+    <rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0" fill="url(#bodyGrad-24)" stroke="#3d4555" stroke-width="2.6"/>
+    <g clip-path="url(#bodyClip-24)" opacity="0.2"></g>
+    <line x1="30" y1="81.0" x2="46" y2="81.0" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="84.2" x2="46" y2="84.2" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="87.4" x2="46" y2="87.4" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="90.6" x2="46" y2="90.6" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><rect x="78" y="84" width="12" height="2.6" rx="1.3" fill="#ff8a1f" class="accent-strip"/><circle class="led" style="animation-delay:0.0s" cx="80.0" cy="91" r="1.4" fill="#ff8a1f"/>
+    <rect x="26" y="32" width="68" height="44" rx="9.5" fill="#1d2129"/>
+  </g>
+  <rect x="28" y="34" width="64" height="40" rx="8" fill="#0b0d12"/>
+  <g id="eyes-24" opacity="0" clip-path="url(#screenClip-24)">
+    <g id="eyes-normal-24">
+      <ellipse id="eye-l-24" class="eye" cx="46" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+      <ellipse id="eye-r-24" class="eye" cx="74" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+    </g>
+    
+    
+    
+    
+    
+    
+    
+    
+    <g id="blush-24" opacity="0">
+      <ellipse cx="36" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+      <ellipse cx="84" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+    </g>
+  </g>
+  <rect x="30" y="35.5" width="22" height="3" rx="1.5" fill="#ffffff" opacity="0.06" pointer-events="none"/>
+  
+  <text x="60" y="51" text-anchor="middle" fill="#ff8a1f" font-family="'Segoe UI', 'Segoe UI Symbol', 'Yu Gothic', 'Helvetica Neue', Arial, sans-serif" font-size="5.7" font-weight="700" letter-spacing="0.6" opacity="0.85">CPU</text><text x="60" y="62" text-anchor="middle" fill="#ff8a1f" font-family="'Segoe UI', 'Segoe UI Symbol', 'Yu Gothic', 'Helvetica Neue', Arial, sans-serif" font-size="9.8" font-weight="700">23%</text><g id="decor-24"></g>
+  </g>
+</g></svg><svg x="452" y="120" width="150" height="150.0" viewBox="0 0 120 120" overflow="visible"><g filter="url(#ds)">
+  <defs>
+    <linearGradient id="bodyGrad-25" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2f3a"/>
+      <stop offset="1" stop-color="#1d2129"/>
+    </linearGradient>
+    <clipPath id="bodyClip-25"><rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0"/></clipPath>
+    <clipPath id="screenClip-25"><rect x="28" y="34" width="64" height="40" rx="8"/></clipPath>
+  </defs>
+  <g id="rig-25">
+  <g id="shell-25">
+    
+    
+    <g fill="#1d2129"><rect x="27.0" y="97.0" width="14.0" height="5.0" rx="2.0"/><rect x="79.0" y="97.0" width="14.0" height="5.0" rx="2.0"/></g>
+    <rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0" fill="url(#bodyGrad-25)" stroke="#3d4555" stroke-width="2.6"/>
+    <g clip-path="url(#bodyClip-25)" opacity="0.2"></g>
+    <line x1="30" y1="81.0" x2="46" y2="81.0" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="84.2" x2="46" y2="84.2" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="87.4" x2="46" y2="87.4" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="90.6" x2="46" y2="90.6" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><rect x="78" y="84" width="12" height="2.6" rx="1.3" fill="#ff8a1f" class="accent-strip"/><circle class="led" style="animation-delay:0.0s" cx="80.0" cy="91" r="1.4" fill="#ff8a1f"/>
+    <rect x="26" y="32" width="68" height="44" rx="9.5" fill="#1d2129"/>
+  </g>
+  <rect x="28" y="34" width="64" height="40" rx="8" fill="#0b0d12"/>
+  <g id="eyes-25" opacity="0" clip-path="url(#screenClip-25)">
+    <g id="eyes-normal-25">
+      <ellipse id="eye-l-25" class="eye" cx="46" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+      <ellipse id="eye-r-25" class="eye" cx="74" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+    </g>
+    
+    
+    
+    
+    
+    
+    
+    
+    <g id="blush-25" opacity="0">
+      <ellipse cx="36" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+      <ellipse cx="84" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+    </g>
+  </g>
+  <rect x="30" y="35.5" width="22" height="3" rx="1.5" fill="#ffffff" opacity="0.06" pointer-events="none"/>
+  
+  <text x="60" y="57.5" text-anchor="middle" fill="#ff8a1f" font-family="'Segoe UI', 'Segoe UI Symbol', 'Yu Gothic', 'Helvetica Neue', Arial, sans-serif" font-size="9.8" font-weight="600">(•ᴗ•)</text><g id="decor-25"></g>
+  </g>
+</g></svg><svg x="648" y="120" width="150" height="150.0" viewBox="0 0 120 120" overflow="visible"><g filter="url(#ds)">
+  <defs>
+    <linearGradient id="bodyGrad-26" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2f3a"/>
+      <stop offset="1" stop-color="#1d2129"/>
+    </linearGradient>
+    <clipPath id="bodyClip-26"><rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0"/></clipPath>
+    <clipPath id="screenClip-26"><rect x="28" y="34" width="64" height="40" rx="8"/></clipPath>
+  </defs>
+  <g id="rig-26">
+  <g id="shell-26">
+    
+    
+    <g fill="#1d2129"><rect x="27.0" y="97.0" width="14.0" height="5.0" rx="2.0"/><rect x="79.0" y="97.0" width="14.0" height="5.0" rx="2.0"/></g>
+    <rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0" fill="url(#bodyGrad-26)" stroke="#3d4555" stroke-width="2.6"/>
+    <g clip-path="url(#bodyClip-26)" opacity="0.2"></g>
+    <line x1="30" y1="81.0" x2="46" y2="81.0" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="84.2" x2="46" y2="84.2" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="87.4" x2="46" y2="87.4" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="90.6" x2="46" y2="90.6" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><rect x="78" y="84" width="12" height="2.6" rx="1.3" fill="#ff8a1f" class="accent-strip"/><circle class="led" style="animation-delay:0.0s" cx="80.0" cy="91" r="1.4" fill="#ff8a1f"/>
+    <rect x="26" y="32" width="68" height="44" rx="9.5" fill="#1d2129"/>
+  </g>
+  <rect x="28" y="34" width="64" height="40" rx="8" fill="#0b0d12"/>
+  <g id="eyes-26" opacity="0" clip-path="url(#screenClip-26)">
+    <g id="eyes-normal-26">
+      <ellipse id="eye-l-26" class="eye" cx="46" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+      <ellipse id="eye-r-26" class="eye" cx="74" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+    </g>
+    
+    
+    
+    
+    
+    
+    
+    
+    <g id="blush-26" opacity="0">
+      <ellipse cx="36" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+      <ellipse cx="84" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+    </g>
+  </g>
+  <rect x="30" y="35.5" width="22" height="3" rx="1.5" fill="#ffffff" opacity="0.06" pointer-events="none"/>
+  
+  <text x="60" y="51" text-anchor="middle" fill="#ff8a1f" font-family="'Segoe UI', 'Segoe UI Symbol', 'Yu Gothic', 'Helvetica Neue', Arial, sans-serif" font-size="5.7" font-weight="700" letter-spacing="0.6" opacity="0.85">TEMP</text><text x="60" y="62" text-anchor="middle" fill="#ff8a1f" font-family="'Segoe UI', 'Segoe UI Symbol', 'Yu Gothic', 'Helvetica Neue', Arial, sans-serif" font-size="9.8" font-weight="700">54°</text><g id="decor-26"></g>
+  </g>
+</g></svg><svg x="844" y="120" width="150" height="150.0" viewBox="0 0 120 120" overflow="visible"><g filter="url(#ds)">
+  <defs>
+    <linearGradient id="bodyGrad-27" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2f3a"/>
+      <stop offset="1" stop-color="#1d2129"/>
+    </linearGradient>
+    <clipPath id="bodyClip-27"><rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0"/></clipPath>
+    <clipPath id="screenClip-27"><rect x="28" y="34" width="64" height="40" rx="8"/></clipPath>
+  </defs>
+  <g id="rig-27">
+  <g id="shell-27">
+    
+    
+    <g fill="#1d2129"><rect x="27.0" y="97.0" width="14.0" height="5.0" rx="2.0"/><rect x="79.0" y="97.0" width="14.0" height="5.0" rx="2.0"/></g>
+    <rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0" fill="url(#bodyGrad-27)" stroke="#3d4555" stroke-width="2.6"/>
+    <g clip-path="url(#bodyClip-27)" opacity="0.2"></g>
+    <line x1="30" y1="81.0" x2="46" y2="81.0" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="84.2" x2="46" y2="84.2" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="87.4" x2="46" y2="87.4" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="90.6" x2="46" y2="90.6" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><rect x="78" y="84" width="12" height="2.6" rx="1.3" fill="#ff8a1f" class="accent-strip"/><circle class="led" style="animation-delay:0.0s" cx="80.0" cy="91" r="1.4" fill="#ff8a1f"/>
+    <rect x="26" y="32" width="68" height="44" rx="9.5" fill="#1d2129"/>
+  </g>
+  <rect x="28" y="34" width="64" height="40" rx="8" fill="#0b0d12"/>
+  <g id="eyes-27" opacity="0" clip-path="url(#screenClip-27)">
+    <g id="eyes-normal-27">
+      <ellipse id="eye-l-27" class="eye" cx="46" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+      <ellipse id="eye-r-27" class="eye" cx="74" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+    </g>
+    
+    
+    
+    
+    
+    
+    
+    
+    <g id="blush-27" opacity="0">
+      <ellipse cx="36" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+      <ellipse cx="84" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+    </g>
+  </g>
+  <rect x="30" y="35.5" width="22" height="3" rx="1.5" fill="#ffffff" opacity="0.06" pointer-events="none"/>
+  
+  <text x="60" y="57.5" text-anchor="middle" fill="#ff8a1f" font-family="'Segoe UI', 'Segoe UI Symbol', 'Yu Gothic', 'Helvetica Neue', Arial, sans-serif" font-size="9.8" font-weight="600">(★ᴗ★)</text><g id="decor-27"></g>
+  </g>
+</g></svg><svg x="1040" y="120" width="150" height="150.0" viewBox="0 0 120 120" overflow="visible"><g filter="url(#ds)">
+  <defs>
+    <linearGradient id="bodyGrad-28" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2f3a"/>
+      <stop offset="1" stop-color="#1d2129"/>
+    </linearGradient>
+    <clipPath id="bodyClip-28"><rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0"/></clipPath>
+    <clipPath id="screenClip-28"><rect x="28" y="34" width="64" height="40" rx="8"/></clipPath>
+  </defs>
+  <g id="rig-28">
+  <g id="shell-28">
+    
+    
+    <g fill="#1d2129"><rect x="27.0" y="97.0" width="14.0" height="5.0" rx="2.0"/><rect x="79.0" y="97.0" width="14.0" height="5.0" rx="2.0"/></g>
+    <rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0" fill="url(#bodyGrad-28)" stroke="#3d4555" stroke-width="2.6"/>
+    <g clip-path="url(#bodyClip-28)" opacity="0.2"></g>
+    <line x1="30" y1="81.0" x2="46" y2="81.0" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="84.2" x2="46" y2="84.2" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="87.4" x2="46" y2="87.4" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="90.6" x2="46" y2="90.6" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><rect x="78" y="84" width="12" height="2.6" rx="1.3" fill="#ff8a1f" class="accent-strip"/><circle class="led" style="animation-delay:0.0s" cx="80.0" cy="91" r="1.4" fill="#ff8a1f"/>
+    <rect x="26" y="32" width="68" height="44" rx="9.5" fill="#1d2129"/>
+  </g>
+  <rect x="28" y="34" width="64" height="40" rx="8" fill="#0b0d12"/>
+  <g id="eyes-28" opacity="0" clip-path="url(#screenClip-28)">
+    <g id="eyes-normal-28">
+      <ellipse id="eye-l-28" class="eye" cx="46" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+      <ellipse id="eye-r-28" class="eye" cx="74" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+    </g>
+    
+    
+    
+    
+    
+    
+    
+    
+    <g id="blush-28" opacity="0">
+      <ellipse cx="36" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+      <ellipse cx="84" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+    </g>
+  </g>
+  <rect x="30" y="35.5" width="22" height="3" rx="1.5" fill="#ffffff" opacity="0.06" pointer-events="none"/>
+  
+  <text x="60" y="57.5" text-anchor="middle" fill="#ff8a1f" font-family="'Segoe UI', 'Segoe UI Symbol', 'Yu Gothic', 'Helvetica Neue', Arial, sans-serif" font-size="9.8" font-weight="600">(˘ω˘) zz</text><g id="decor-28"></g>
+  </g>
+</g></svg>
+  <rect x="30" y="232" width="1220" height="40" rx="10" fill="#1c2331" stroke="#2a3446"/><rect x="74" y="240" width="24" height="24" rx="5" fill="#2d6fb8" opacity="0.9"/><rect x="120" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="166" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="212" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="258" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="304" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="350" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="396" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="442" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="488" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="534" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="580" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="626" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="672" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="718" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="764" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="810" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="856" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="902" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="948" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="994" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="1040" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="1086" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="1132" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/><rect x="1178" y="240" width="24" height="24" rx="5" fill="#2a3242" opacity="0.8"/>
+  <text x="135" y="294" text-anchor="middle" font-size="15" font-weight="600" fill="#c3cad6">Heure</text><text x="331" y="294" text-anchor="middle" font-size="15" font-weight="600" fill="#c3cad6">Processeur</text><text x="527" y="294" text-anchor="middle" font-size="15" font-weight="600" fill="#c3cad6">Humeur du matin</text><text x="723" y="294" text-anchor="middle" font-size="15" font-weight="600" fill="#c3cad6">Température</text><text x="919" y="294" text-anchor="middle" font-size="15" font-weight="600" fill="#c3cad6">GPU à fond</text><text x="1115" y="294" text-anchor="middle" font-size="15" font-weight="600" fill="#c3cad6">La nuit</text>
+  
+</svg>

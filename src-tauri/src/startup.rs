@@ -1,5 +1,9 @@
 /// Enable/disable HUE in the current-user Windows startup list (HKCU Run).
 pub fn set_launch_at_startup(enabled: bool) -> Result<(), String> {
+    // Dev builds (`tauri dev`) must never repoint the user's real startup entry.
+    if cfg!(debug_assertions) {
+        return Ok(());
+    }
     #[cfg(windows)]
     {
         use std::os::windows::process::CommandExt;
@@ -24,6 +28,8 @@ pub fn set_launch_at_startup(enabled: bool) -> Result<(), String> {
                     "/f",
                 ])
                 .creation_flags(CREATE_NO_WINDOW)
+                .stdout(std::process::Stdio::null())
+                .stderr(std::process::Stdio::null())
                 .status()
                 .map_err(|e| format!("reg add : {e}"))?;
             if !status.success() {
@@ -33,6 +39,8 @@ pub fn set_launch_at_startup(enabled: bool) -> Result<(), String> {
             let _ = Command::new("reg")
                 .args(["delete", RUN_KEY, "/v", RUN_VALUE, "/f"])
                 .creation_flags(CREATE_NO_WINDOW)
+                .stdout(std::process::Stdio::null())
+                .stderr(std::process::Stdio::null())
                 .status();
         }
         return Ok(());

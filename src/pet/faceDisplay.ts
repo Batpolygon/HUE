@@ -1,21 +1,8 @@
 import { invoke } from "@tauri-apps/api/core";
 
-export type PeekDisplayMode = "all" | "spec_only" | "clock_only" | "eyes_only";
+import type { LiveStats, PeekDisplayMode } from "../types";
 
-export interface LiveStats {
-  cpu_pct: number;
-  ram_pct: number;
-  ram_used_gb: number;
-  ram_total_gb: number;
-  cpu_freq_mhz: number;
-  disk_pct: number;
-  battery_pct: number | null;
-  on_ac: boolean | null;
-  gpu_pct: number;
-  hour: number;
-  minute: number;
-  second: number;
-}
+export type { PeekDisplayMode } from "../types";
 
 type Frame =
   | { kind: "eyes" }
@@ -25,6 +12,7 @@ type Frame =
   | { kind: "disk" }
   | { kind: "gpu" }
   | { kind: "batt" }
+  | { kind: "temp" }
   | { kind: "mood" };
 
 const FRAME_MS = 3200;
@@ -36,6 +24,12 @@ let frameIdx = 0;
 let timer: number | null = null;
 let statsCache: LiveStats | null = null;
 let lastStatsAt = 0;
+
+/** Fresh stats pushed by the backend (avoids polling). */
+export function feedStats(s: LiveStats) {
+  statsCache = s;
+  lastStatsAt = Date.now();
+}
 
 export function setPeekDisplayMode(m: PeekDisplayMode) {
   mode = m;
@@ -68,6 +62,7 @@ function framesForMode(): Frame[] {
         { kind: "ram" },
         { kind: "disk" },
         { kind: "gpu" },
+        { kind: "temp" },
         { kind: "batt" },
       ];
     case "all":
@@ -80,6 +75,7 @@ function framesForMode(): Frame[] {
         { kind: "ram" },
         { kind: "disk" },
         { kind: "gpu" },
+        { kind: "temp" },
         { kind: "batt" },
       ];
   }
@@ -163,15 +159,7 @@ async function render() {
   if (frame.kind === "mood") {
     const s = await refreshStats();
     const hour = s?.hour ?? new Date().getHours();
-    let glyph = hour >= 22 || hour < 6 ? "zzz" : hour < 11 ? ":)" : hour < 18 ? "•ᴗ•" : "-_-";
-    if (s) {
-      if (s.cpu_pct >= 85 || s.ram_pct >= 90) glyph = ">_<";
-      else if (s.disk_pct >= 92) glyph = ";;";
-      else if (s.battery_pct != null && s.battery_pct < 20 && s.on_ac !== true) glyph = "zZ";
-      else if (s.gpu_pct >= 80) glyph = "★_★";
-      else if (s.cpu_pct < 25 && s.ram_pct < 50) glyph = hour < 11 ? ":D" : "•ᴗ•";
-    }
-    face.innerHTML = `<span class="face-clock" style="font-size:13px">${glyph}</span>`;
+    face.innerHTML = `<span class="face-clock face-glyph">${pick(MOODS[moodOf(s, hour)])}</span>`;
     return;
   }
 
@@ -194,6 +182,16 @@ async function render() {
     case "gpu":
       face.innerHTML = `<span class="face-label">GPU</span><span class="face-value">${fmt(s.gpu_pct)}%</span>`;
       break;
+    case "temp": {
+      const t = Math.max(s.cpu_temp ?? 0, s.gpu_temp ?? 0);
+      if (!t) {
+        frameIdx += 1;
+        void render();
+        return;
+      }
+      face.innerHTML = `<span class="face-label">TEMP</span><span class="face-value">${Math.round(t)}°</span>`;
+      break;
+    }
     case "batt":
       if (s.battery_pct == null) {
         frameIdx += 1;
@@ -206,6 +204,38 @@ async function render() {
       }
       break;
   }
+}
+
+/** Kaomoji shown on the tucked-away screen, by mood — a fresh one each time the frame comes up. */
+const MOODS = {
+  night: ["(-_-) zz", "(˘ω˘) zz", "(=_=) zz", "(ᴗ_ᴗ) zz"],
+  morning: ["(•ᴗ•)", "(^ᴗ^)", "\\(^o^)/", "(•ω•)"],
+  day: ["(•ᴗ•)", "(^-^)", "(•ω•)", "(^ω^)"],
+  evening: ["(˘ᴗ˘)", "(-ᴗ-)", "(•ᴗ•)~", "(ᴗ_ᴗ)"],
+  chill: ["(^ᴗ^)", "(•ᴗ•)♪", "(˘ω˘)", "(^ω^)♪"],
+  busy: ["(>_<)", "(@_@)", "(ò_ó)", "(°ロ°)"],
+  full: ["(°□°)", "(⊙_⊙)", "(o_O)"],
+  lowbatt: ["(=_=)", "(×_×)", "(-_-)…"],
+  gaming: ["(★ᴗ★)", "(★_★)", "(òᴗó)"],
+} as const;
+
+type Mood = keyof typeof MOODS;
+
+function moodOf(s: LiveStats | null, hour: number): Mood {
+  if (s) {
+    if (s.cpu_pct >= 85 || s.ram_pct >= 90) return "busy";
+    if (s.disk_pct >= 92) return "full";
+    if (s.battery_pct != null && s.battery_pct < 20 && s.on_ac !== true) return "lowbatt";
+    if (s.gpu_pct >= 80) return "gaming";
+  }
+  if (hour >= 22 || hour < 6) return "night";
+  if (s && s.cpu_pct < 25 && s.ram_pct < 50 && hour >= 11) return "chill";
+  if (hour < 11) return "morning";
+  return hour < 18 ? "day" : "evening";
+}
+
+function pick<T>(list: readonly T[]): T {
+  return list[Math.floor(Math.random() * list.length)];
 }
 
 function pad(n: number) {

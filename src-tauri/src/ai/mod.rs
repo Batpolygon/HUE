@@ -1,8 +1,13 @@
-pub mod api_fallback;
+pub mod achievements;
+pub mod calendar;
 pub mod chatter;
+pub mod documents;
+pub mod lines;
 pub mod llama_embed;
 pub mod llama_runtime;
+pub mod llm;
 pub mod memory;
+pub mod mood;
 pub mod personality;
+pub mod tools;
 pub mod whisper_stt;
-

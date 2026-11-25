@@ -1,4 +1,3 @@
-use sysinfo::{ProcessesToUpdate, System};
 
 const CAPTURE_PROCESSES: &[&str] = &[
     "obs64.exe",
@@ -39,28 +38,15 @@ const GAME_PROCESSES: &[&str] = &[
     "gameoverlayui.exe",
 ];
 
-fn normalize(name: &str) -> String {
-    name.to_lowercase()
-}
-
 /// OBS / capture tools — hide while they run (even in background).
 fn capture_tool_running() -> bool {
-    let mut sys = System::new();
-    sys.refresh_processes(ProcessesToUpdate::All, true);
-    for proc in sys.processes().values() {
-        let name = normalize(&proc.name().to_string_lossy());
-        if CAPTURE_PROCESSES.iter().any(|p| name == *p) {
-            return true;
-        }
-    }
-    false
+    super::sysmon::any_process_named(CAPTURE_PROCESSES)
 }
 
 /// Foreground is a known game process (not merely "a game is installed somewhere").
 fn foreground_is_known_game(exclude_hwnd: Option<isize>) -> bool {
     #[cfg(windows)]
     {
-        use sysinfo::Pid;
         use windows::Win32::Foundation::HWND;
         use windows::Win32::UI::WindowsAndMessaging::{
             GetForegroundWindow, GetWindowThreadProcessId,
@@ -81,10 +67,7 @@ fn foreground_is_known_game(exclude_hwnd: Option<isize>) -> bool {
             if pid == 0 {
                 return false;
             }
-            let mut sys = System::new();
-            sys.refresh_processes(ProcessesToUpdate::All, true);
-            if let Some(proc) = sys.process(Pid::from_u32(pid)) {
-                let name = normalize(&proc.name().to_string_lossy());
+            if let Some(name) = super::sysmon::process_name(pid) {
                 return GAME_PROCESSES.iter().any(|p| name == *p);
             }
         }
@@ -219,19 +202,25 @@ pub fn should_conceal(stealth_auto: bool, exclude_hwnd: Option<isize>) -> bool {
 
 /// Desktop work area (excludes taskbar) for the monitor under the cursor / primary.
 pub fn desktop_work_area() -> Option<crate::physics::WorkArea> {
+    let (x, y) = cursor_screen_pos().unwrap_or((0.0, 0.0));
+    work_area_at(x, y)
+}
+
+/// Work area (excludes taskbar) of the monitor containing `(x, y)` — the nearest one if the
+/// point is off every screen.
+pub fn work_area_at(x: f64, y: f64) -> Option<crate::physics::WorkArea> {
     #[cfg(windows)]
     {
         use windows::Win32::Foundation::{POINT, RECT};
         use windows::Win32::Graphics::Gdi::{
             GetMonitorInfoW, MonitorFromPoint, MONITORINFO, MONITOR_DEFAULTTONEAREST,
         };
-        use windows::Win32::UI::WindowsAndMessaging::GetCursorPos;
 
         unsafe {
-            let mut pt = POINT::default();
-            if GetCursorPos(&mut pt).is_err() {
-                pt = POINT { x: 0, y: 0 };
-            }
+            let pt = POINT {
+                x: x.round() as i32,
+                y: y.round() as i32,
+            };
             let monitor = MonitorFromPoint(pt, MONITOR_DEFAULTTONEAREST);
             let mut mi = MONITORINFO {
                 cbSize: std::mem::size_of::<MONITORINFO>() as u32,
@@ -253,6 +242,7 @@ pub fn desktop_work_area() -> Option<crate::physics::WorkArea> {
     }
     #[cfg(not(windows))]
     {
+        let _ = (x, y);
         None
     }
 }

@@ -1,6 +1,6 @@
 use crate::physics::{HueState, PhysicsBody, PET_WINDOW};
 use crate::window_util;
-use crate::AppState;
+use crate::state::AppState;
 use tauri::{
     image::Image,
     menu::{Menu, MenuItem, PredefinedMenuItem},
@@ -74,7 +74,7 @@ fn show_hue(app: &AppHandle) {
     let _ = app.emit("hue-hud", serde_json::json!({ "open": false }));
 }
 
-fn peek_hue(app: &AppHandle) {
+pub fn peek_hue(app: &AppHandle) {
     let state = app.state::<AppState>();
     *state.hud_open.lock() = false;
     *state.settings_open.lock() = false;

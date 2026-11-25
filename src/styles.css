@@ -2,10 +2,12 @@
   color-scheme: dark;
   --eye: #ff8a1f;
   --panel: rgba(18, 20, 28, 0.94);
+  --panel-2: #0d1017;
   --text: #f2f4f8;
   --muted: #9aa3b5;
   --accent: #ff8a1f;
   --border: rgba(255, 255, 255, 0.14);
+  --danger: #ef5350;
   font-family: "Segoe UI", "Trebuchet MS", sans-serif;
 }
 
@@ -29,6 +31,12 @@ body {
   position: relative;
 }
 
+.hidden {
+  display: none !important;
+}
+
+/* ───────────────────────── stage ───────────────────────── */
+
 #pet-stage {
   width: 100%;
   height: 100%;
@@ -38,27 +46,23 @@ body {
   align-items: center;
   justify-content: center;
   padding: 8px;
-  gap: 0;
 }
 
 #pet-stage.hud {
   justify-content: flex-start;
   padding: 8px 8px 10px;
   gap: 6px;
-  height: 100%;
   overflow: hidden;
 }
 
-/* Peek: pet pinned to the top of the window (visible skull strip). Bubble is a separate window. */
+/* Peek: pet pinned to the top of the window (visible skull strip). */
 body.peeking #pet-stage {
   justify-content: flex-start;
-  align-items: center;
   padding: 0;
 }
 
 body.peeking .pet {
   margin: 0;
-  flex-shrink: 0;
 }
 
 .pet {
@@ -67,53 +71,11 @@ body.peeking .pet {
   height: 148px;
   flex-shrink: 0;
   cursor: grab;
-  transform-origin: center center;
+  /* Squash around the feet: bounces stay grounded instead of shrinking mid-air. */
+  transform-origin: 50% 88%;
   touch-action: none;
   z-index: 2;
-}
-
-/* Overlay on the black "screen" (SVG rect 28,34,64,40 in 120 viewBox) */
-.face-display {
-  position: absolute;
-  left: 23.333%;
-  top: 28.333%;
-  width: 53.333%;
-  height: 33.333%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1px;
-  color: #ff8a1f;
-  font-family: "Segoe UI", "Trebuchet MS", sans-serif;
-  font-variant-numeric: tabular-nums;
-  pointer-events: none;
-  z-index: 3;
-  line-height: 1.05;
-  text-align: center;
-  overflow: hidden;
-}
-
-.face-display .face-clock {
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-}
-
-.face-display .face-label {
-  font-size: 7px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  opacity: 0.85;
-}
-
-.face-display .face-value {
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.pet.face-overlay .eye {
-  opacity: 0;
+  --eye-open: 1;
 }
 
 .pet:active,
@@ -126,22 +88,151 @@ body.dragging .pet {
   height: 100%;
   display: block;
   overflow: visible;
-  /* Keep shadow inside the 168px window so it isn't clipped */
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35));
 }
 
-/* Always pivot eyes around their own center — avoids flying out of the face. */
-.pet .eye {
+/* The frame never mirrors: only the eyes move (smoothly) toward the cursor / walk direction. */
+.pet #eyes {
+  transition: transform 0.18s ease-out;
+}
+
+.pet #rig {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+.pet .eye,
+.pet #eyes-normal,
+.pet .face {
   transform-box: fill-box;
   transform-origin: 50% 50%;
 }
 
-.pet.state-dragging .eye {
-  transform: scale(1.15);
+.pet #eyes-normal {
+  transform: scaleY(var(--eye-open));
+  transition: transform 0.6s ease;
 }
 
-.pet.facing-left svg {
-  transform: scaleX(-1);
+/* ───────────────────────── expressions ───────────────────────── */
+
+.pet .face {
+  display: none;
+}
+
+.pet.has-face #eyes-normal {
+  display: none;
+}
+
+.pet[data-face="happy"] .face-happy,
+.pet[data-face="strain"] .face-strain,
+.pet[data-face="love"] .face-love,
+.pet[data-face="dead"] .face-dead,
+.pet[data-face="sleepy"] .face-sleepy,
+.pet[data-face="sleep"] .face-sleep,
+.pet[data-face="sad"] .face-sad,
+.pet[data-face="wide"] .face-wide {
+  display: inline;
+  animation: facePop 0.26s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pet[data-face="love"] .face-love {
+  animation: facePop 0.26s cubic-bezier(0.34, 1.56, 0.64, 1), heartBeat 0.9s ease-in-out 0.26s infinite;
+}
+
+.pet[data-face="strain"] .face-strain {
+  animation: facePop 0.26s cubic-bezier(0.34, 1.56, 0.64, 1), strainShake 0.18s linear 0.26s infinite;
+}
+
+.pet[data-face="sleep"] .face-sleep {
+  animation: sleepBreath 3.2s ease-in-out infinite;
+}
+
+.pet #blush {
+  transition: opacity 0.5s ease;
+}
+
+@keyframes facePop {
+  from {
+    transform: scale(0.7);
+    opacity: 0.25;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes heartBeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.12);
+  }
+}
+
+@keyframes strainShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(0.8px);
+  }
+}
+
+@keyframes sleepBreath {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.pet.sleeping svg {
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35)) brightness(0.82);
+}
+
+/* LEDs / accents breathe a little. */
+.pet .led {
+  animation: ledBlink 3.2s ease-in-out infinite;
+}
+
+.pet.sleeping .led {
+  animation-duration: 6s;
+}
+
+@keyframes ledBlink {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.pet .hat {
+  animation: hatBob 2.8s ease-in-out infinite;
+}
+
+@keyframes hatBob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -0.8px;
+  }
+}
+
+/* ───────────────────────── states ───────────────────────── */
+
+.pet.state-dragging .eye {
+  transform: scale(1.15);
 }
 
 .pet.state-interacting:not(.dizzy) svg {
@@ -149,72 +240,16 @@ body.dragging .pet {
 }
 
 .pet.state-interacting:not(.dizzy) .eye {
-  transform: scale(1.12);
+  transform: scale(1.1);
   filter: brightness(1.2);
-}
-
-.pet.state-tired .eye {
-  transform: scaleY(0.4);
 }
 
 .pet.state-panic .eye {
   animation: spiral 0.4s linear infinite;
 }
 
-.pet.dizzy .eye,
-.pet.state-dizzy .eye {
-  animation: dizzySpin 0.55s linear infinite;
-  filter: brightness(1.15) saturate(1.2);
-}
-
-.pet.dizzy #eye-l,
-.pet.state-dizzy #eye-l {
-  transform-origin: 50% 50%;
-}
-
-.pet.dizzy #eye-r,
-.pet.state-dizzy #eye-r {
-  animation-direction: reverse;
-}
-
-.pet.dizzy svg,
-.pet.state-dizzy svg {
-  animation: dizzyWobble 0.7s ease-in-out infinite;
-  filter: drop-shadow(0 4px 10px rgba(255, 138, 31, 0.28)) hue-rotate(12deg);
-}
-
-.pet .dizzy-fx {
-  pointer-events: none;
-}
-
-.pet.dizzy .dizzy-star,
-.pet.state-dizzy .dizzy-star {
-  animation: dizzyStar 1.1s ease-in-out infinite;
-}
-
-.pet.dizzy .dizzy-star:nth-child(2),
-.pet.state-dizzy .dizzy-star:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.pet.dizzy .dizzy-star:nth-child(3),
-.pet.state-dizzy .dizzy-star:nth-child(3) {
-  animation-delay: 0.45s;
-}
-
-.pet.dizzy .dizzy-swirl,
-.pet.state-dizzy .dizzy-swirl {
-  animation: dizzySwirl 0.9s linear infinite;
-  transform-origin: 60px 54px;
-  transform-box: fill-box;
-}
-
 .pet.state-joy .eye {
   filter: brightness(1.35);
-}
-
-.pet.state-joy svg {
-  filter: drop-shadow(0 4px 8px rgba(255, 138, 31, 0.35)) brightness(1.06);
 }
 
 .pet.state-heavy svg {
@@ -233,9 +268,51 @@ body.dragging .pet {
   transform: scale(1.06);
 }
 
-/* Rare idle blink — scaleY only, anchored to eye center */
-.pet:not(.speaking):not(.face-overlay):not(.eye-chirp):not(.facing-user):not(.state-tired):not(.state-panic):not(.dizzy):not(.state-dizzy) .eye {
+.pet.dizzy .eye,
+.pet.state-dizzy .eye {
+  animation: dizzySpin 0.55s linear infinite;
+  filter: brightness(1.15) saturate(1.2);
+}
+
+.pet.dizzy #eye-r,
+.pet.state-dizzy #eye-r {
+  animation-direction: reverse;
+}
+
+.pet.dizzy #rig,
+.pet.state-dizzy #rig {
+  animation: dizzyWobble 0.7s ease-in-out infinite;
+}
+
+.pet .dizzy-fx {
+  pointer-events: none;
+}
+
+.pet.dizzy .dizzy-star {
+  animation: dizzyStar 1.1s ease-in-out infinite;
+}
+
+.pet.dizzy .dizzy-star:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.pet.dizzy .dizzy-star:nth-child(3) {
+  animation-delay: 0.45s;
+}
+
+.pet.dizzy .dizzy-swirl {
+  animation: dizzySwirl 0.9s linear infinite;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+/* Rare idle blink */
+.pet:not(.speaking):not(.face-overlay):not(.eye-chirp):not(.facing-user):not(.dizzy):not(.has-face) .eye {
   animation: idleBlink 5.2s ease-in-out infinite;
+}
+
+.pet #eye-r {
+  animation-delay: 0.04s;
 }
 
 @keyframes idleBlink {
@@ -250,8 +327,9 @@ body.dragging .pet {
   }
 }
 
-/* Eyes only move on each animalese blip — not a continuous loop while "speaking". */
-.pet.eye-chirp .eye {
+/* Eyes pulse on each animalese blip. */
+.pet.eye-chirp .eye,
+.pet.eye-chirp .face {
   animation: eyeChirp 0.12s ease-in-out;
 }
 
@@ -266,11 +344,8 @@ body.dragging .pet {
 }
 
 @keyframes spiral {
-  from {
-    transform: rotate(0deg) scale(1);
-  }
   to {
-    transform: rotate(360deg) scale(1);
+    transform: rotate(360deg);
   }
 }
 
@@ -316,6 +391,482 @@ body.dragging .pet {
   }
 }
 
+/* ───────────────────────── micro-animations ───────────────────────── */
+
+.pet.micro-hop #rig {
+  animation: microHop 0.8s linear;
+}
+
+.pet.micro-wiggle #rig {
+  animation: microWiggle 1s ease-in-out;
+}
+
+.pet.micro-stretch #rig {
+  animation: microStretch 1.4s ease-in-out;
+}
+
+.pet.micro-yawn #rig {
+  animation: microYawn 1.6s ease-in-out;
+}
+
+.pet.micro-dance #rig {
+  animation: microDance 0.65s ease-in-out 4;
+}
+
+.pet.micro-look #eyes-normal {
+  animation: microLook 1.8s ease-in-out;
+}
+
+/* Anticipation → take-off → hang → landing squash → small rebound → settle. */
+@keyframes microHop {
+  0% {
+    transform: translateY(0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.33, 0, 0.67, 1);
+  }
+  14% {
+    transform: translateY(0) scale(1.07, 0.92);
+    animation-timing-function: cubic-bezier(0.2, 0.75, 0.35, 1);
+  }
+  40% {
+    transform: translateY(-10px) scale(0.96, 1.05);
+    animation-timing-function: cubic-bezier(0.55, 0, 0.8, 0.35);
+  }
+  62% {
+    transform: translateY(0) scale(1.08, 0.91);
+    animation-timing-function: cubic-bezier(0.2, 0.75, 0.35, 1);
+  }
+  78% {
+    transform: translateY(-1.6px) scale(0.985, 1.02);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+}
+
+/* Damped sway: each swing smaller than the last. */
+@keyframes microWiggle {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  14% {
+    transform: rotate(-6deg);
+  }
+  34% {
+    transform: rotate(5deg);
+  }
+  54% {
+    transform: rotate(-3deg);
+  }
+  72% {
+    transform: rotate(1.6deg);
+  }
+  86% {
+    transform: rotate(-0.6deg);
+  }
+}
+
+@keyframes microStretch {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  35%,
+  60% {
+    transform: scale(0.94, 1.1);
+  }
+}
+
+@keyframes microYawn {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  30%,
+  65% {
+    transform: scale(1.05, 0.95) rotate(-2deg);
+  }
+}
+
+@keyframes microDance {
+  0%,
+  100% {
+    transform: rotate(0) translateY(0);
+  }
+  25% {
+    transform: rotate(-8deg) translateY(-3px);
+  }
+  75% {
+    transform: rotate(8deg) translateY(-3px);
+  }
+}
+
+/* ───────────────────────── boot hologram ───────────────────────── */
+
+.pet.ghost {
+  cursor: progress;
+}
+
+.pet.ghost svg {
+  filter: drop-shadow(0 0 6px rgba(94, 200, 255, 0.55));
+  animation: ghostFloat 2.6s ease-in-out infinite;
+}
+
+.pet.ghost .ghost-outline {
+  animation: ghostDash 1.8s linear infinite;
+}
+
+.pet.ghost .ghost-scan {
+  animation: ghostScan 2.4s linear infinite;
+}
+
+.pet.ghost .ghost-spinner {
+  transform-box: view-box;
+  transform-origin: 60px 46px;
+  animation: ghostSpin 0.9s linear infinite;
+}
+
+.pet.ghost .ghost-text {
+  animation: ghostText 1.6s ease-in-out infinite;
+}
+
+.pet.ghost .ghost-bar {
+  animation: ghostBar 1.1s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+}
+
+@keyframes ghostFloat {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.96;
+    transform: translateY(-2.5px);
+  }
+}
+
+@keyframes ghostDash {
+  to {
+    stroke-dashoffset: -15;
+  }
+}
+
+@keyframes ghostScan {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(96px);
+  }
+}
+
+@keyframes ghostSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ghostText {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes ghostBar {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(26px);
+  }
+}
+
+/* Hologram → real shell: a blue flash that solidifies with a soft overshoot. */
+.pet.materialize svg {
+  animation: materialize 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes materialize {
+  0% {
+    opacity: 0.15;
+    transform: scale(0.9);
+    filter: drop-shadow(0 0 12px rgba(94, 200, 255, 0.95)) brightness(1.9) saturate(0.1);
+  }
+  45% {
+    opacity: 1;
+    transform: scale(1.04);
+    filter: drop-shadow(0 0 9px rgba(94, 200, 255, 0.6)) brightness(1.3) saturate(0.6);
+  }
+  70% {
+    transform: scale(0.985);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35));
+  }
+}
+
+@keyframes microLook {
+  0%,
+  100% {
+    transform: translateX(0) scaleY(var(--eye-open));
+  }
+  25%,
+  40% {
+    transform: translateX(-5px) scaleY(var(--eye-open));
+  }
+  60%,
+  80% {
+    transform: translateX(5px) scaleY(var(--eye-open));
+  }
+}
+
+/* ───────────────────────── peek screen overlay ───────────────────────── */
+
+/* On the black "screen" (SVG rect 28,34,64,40 in a 120 viewBox) */
+.face-display {
+  position: absolute;
+  left: 23.333%;
+  top: 28.333%;
+  width: 53.333%;
+  height: 33.333%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  color: var(--eye);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  z-index: 3;
+  line-height: 1.05;
+  text-align: center;
+  overflow: hidden;
+}
+
+.face-display .face-clock {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.face-display .face-glyph {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.face-display .face-label {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  opacity: 0.85;
+}
+
+.face-display .face-value {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pet.face-overlay #eyes {
+  opacity: 0;
+}
+
+/* ───────────────────────── particles ───────────────────────── */
+
+.fx-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 8;
+}
+
+.particle {
+  position: absolute;
+  pointer-events: none;
+  line-height: 1;
+  animation-name: floatAway;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+  --dx: 0px;
+  --dy: -40px;
+  --s: 1;
+  --rot: 0deg;
+}
+
+@keyframes floatAway {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(calc(var(--s) * 0.6)) rotate(0deg);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(var(--s)) rotate(var(--rot));
+  }
+}
+
+.p-heart {
+  color: #ff6fa1;
+  font-size: 14px;
+  text-shadow: 0 0 4px rgba(255, 111, 161, 0.6);
+}
+
+.p-note {
+  color: #ffd54f;
+  font-size: 13px;
+}
+
+.p-zzz {
+  color: #b3c7ff;
+  font-size: 13px;
+  font-weight: 700;
+  font-style: italic;
+  animation-timing-function: ease-in-out;
+}
+
+.p-confetti {
+  width: 5px;
+  height: 8px;
+  border-radius: 1px;
+  background: var(--c);
+  animation-name: confettiFly;
+  animation-timing-function: cubic-bezier(0.2, 0.6, 0.4, 1);
+}
+
+@keyframes confettiFly {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) rotate(var(--rot));
+  }
+}
+
+.p-sweat {
+  width: 5px;
+  height: 7px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: #7fd3ff;
+  box-shadow: 0 0 3px rgba(127, 211, 255, 0.6);
+  animation-name: drip;
+  animation-timing-function: ease-in;
+}
+
+@keyframes drip {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.6);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0.9);
+  }
+}
+
+.p-steam {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+  filter: blur(1px);
+}
+
+.p-ring {
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  border-radius: 50%;
+  border: 2px solid rgba(79, 195, 247, 0.9);
+  animation-name: ringOut;
+}
+
+@keyframes ringOut {
+  from {
+    opacity: 1;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 0;
+    transform: scale(3.4);
+  }
+}
+
+.p-snow {
+  color: #e8f4ff;
+  font-size: 10px;
+  animation-name: fall;
+  animation-timing-function: linear;
+}
+
+.p-leaf {
+  width: 7px;
+  height: 5px;
+  border-radius: 0 70% 0 70%;
+  background: var(--c);
+  animation-name: fall;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes fall {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0deg) scale(var(--s));
+  }
+  10% {
+    opacity: 0.9;
+  }
+  90% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(var(--s));
+  }
+}
+
+.drop-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  z-index: 12;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(255, 138, 31, 0.92);
+  color: #111;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: dropPulse 0.9s ease-in-out infinite;
+}
+
+@keyframes dropPulse {
+  50% {
+    transform: translateX(-50%) scale(1.06);
+  }
+}
+
+/* ───────────────────────── HUD ───────────────────────── */
+
 .gear {
   position: absolute;
   top: 6px;
@@ -332,36 +883,110 @@ body.dragging .pet {
   line-height: 1;
 }
 
+.hud {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 3;
+}
+
+.chat-status {
+  font-size: 10.5px;
+  color: var(--muted);
+  padding: 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+}
+
 .bubble {
   width: 100%;
-  flex: 0 1 auto;
-  min-height: 28px;
-  max-height: 72px;
+  flex: 1 1 auto;
+  min-height: 30px;
   overflow-x: hidden;
   overflow-y: auto;
-  margin: 0;
-  padding: 6px 8px;
+  padding: 7px 9px;
   border-radius: 10px;
   background: var(--panel);
   color: var(--text);
   border: 1px solid var(--border);
-  font-size: 11px;
-  line-height: 1.3;
+  font-size: 11.5px;
+  line-height: 1.38;
   word-break: break-word;
-  pointer-events: auto;
   user-select: text;
-  z-index: 3;
   overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.bubble .li {
+  display: inline-block;
+  padding-left: 10px;
+  text-indent: -8px;
+}
+
+.bubble .li::before {
+  content: "• ";
+  color: var(--accent);
+}
+
+.bubble .err {
+  color: #ffab91;
+}
+
+.bubble .typing {
+  color: var(--muted);
+  animation: sleepBreath 1.2s ease-in-out infinite;
+}
+
+.confirm-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 138, 31, 0.6);
+  background: rgba(40, 26, 12, 0.95);
+  color: var(--text);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.confirm-bar span {
+  flex: 1;
+  min-width: 0;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.confirm-bar button {
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #1b2130;
+  color: var(--text);
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+#confirm-yes {
+  background: var(--accent);
+  color: #111;
+  border: none;
+  font-weight: 700;
 }
 
 .prompt-form {
   display: flex;
   gap: 4px;
   width: 100%;
-  z-index: 3;
   flex-shrink: 0;
-  margin-top: 0;
-  padding-bottom: 2px;
 }
 
 .prompt-form input {
@@ -377,6 +1002,10 @@ body.dragging .pet {
   user-select: text;
 }
 
+.prompt-form input:focus {
+  border-color: rgba(255, 138, 31, 0.55);
+}
+
 .prompt-form button {
   border-radius: 10px;
   border: 1px solid var(--border);
@@ -385,19 +1014,28 @@ body.dragging .pet {
   width: 36px;
   flex-shrink: 0;
   cursor: pointer;
+  --level: 0;
+  transition: box-shadow 0.08s linear, background 0.2s ease;
 }
 
-.hidden {
-  display: none !important;
+#stt-btn.rec {
+  background: #4a1414;
+  border-color: var(--danger);
+  box-shadow: 0 0 0 calc(var(--level) * 9px) rgba(239, 83, 80, 0.35);
 }
+
+#stt-btn.busy {
+  opacity: 0.6;
+  animation: sleepBreath 1s ease-in-out infinite;
+}
+
+/* ───────────────────────── settings ───────────────────────── */
 
 .modal {
   position: absolute;
   inset: 0;
   background: rgba(8, 10, 14, 0.55);
   display: flex;
-  align-items: stretch;
-  justify-content: stretch;
   z-index: 20;
   padding: 8px;
 }
@@ -405,12 +1043,14 @@ body.dragging .pet {
 .modal-card {
   width: 100%;
   height: 100%;
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 12px;
+  padding: 12px 12px 8px;
   color: var(--text);
+  overflow: hidden;
 }
 
 .modal-card header {
@@ -418,6 +1058,7 @@ body.dragging .pet {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+  flex-shrink: 0;
 }
 
 .modal-card h2 {
@@ -425,8 +1066,61 @@ body.dragging .pet {
   font-size: 15px;
 }
 
-.modal-card label,
-.modal-card fieldset {
+.modal-card h2.err {
+  color: #ffab91;
+  font-size: 12px;
+}
+
+.modal-card h3 {
+  margin: 14px 0 6px;
+  font-size: 12px;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+
+#settings-close {
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #1b2130;
+  color: var(--text);
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.tabs {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+
+.tabs button {
+  flex: 1 1 auto;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  padding: 5px 4px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.tabs button.active {
+  background: rgba(255, 138, 31, 0.16);
+  border-color: rgba(255, 138, 31, 0.6);
+  color: var(--text);
+}
+
+.tab {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+}
+
+.modal-card label {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -435,55 +1129,340 @@ body.dragging .pet {
   color: var(--muted);
 }
 
-.modal-card .row {
+.modal-card label.row {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
 }
 
+.modal-card .lbl b {
+  color: var(--text);
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.modal-card .inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.modal-card .inline small {
+  color: var(--muted);
+  font-size: 10px;
+}
+
 .modal-card input[type="text"],
 .modal-card input[type="password"],
+.modal-card input[type="number"],
 .modal-card select {
   border-radius: 8px;
   border: 1px solid var(--border);
-  background: #0d1017;
+  background: var(--panel-2);
   color: var(--text);
   padding: 6px 8px;
+  font-size: 12px;
+  user-select: text;
 }
 
-.modal-card fieldset {
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 8px;
+.modal-card input[type="number"] {
+  width: 64px;
 }
 
-#settings-save,
-#settings-close {
+.modal-card input[type="range"] {
+  accent-color: var(--accent);
+}
+
+.modal-card input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.hint {
+  margin: -2px 0 6px;
+  font-size: 10.5px;
+  color: var(--muted);
+  line-height: 1.38;
+}
+
+.btn-row {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+button.ghost {
   border-radius: 8px;
   border: 1px solid var(--border);
   background: #1b2130;
   color: var(--text);
   padding: 6px 10px;
+  font-size: 11px;
   cursor: pointer;
 }
 
-#settings-save {
-  width: 100%;
-  margin-top: 8px;
-  background: linear-gradient(135deg, #ff8a1f, #e06700);
-  color: #111;
-  font-weight: 600;
-  border: none;
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 
-#dna-view {
-  white-space: pre-wrap;
-  font-size: 10px;
-  color: var(--text);
-  background: #0d1017;
+.list li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: space-between;
+  padding: 5px 8px;
   border-radius: 8px;
-  padding: 8px;
-  max-height: 120px;
-  overflow: auto;
+  background: var(--panel-2);
+  font-size: 11px;
+  color: var(--text);
+}
+
+.list li span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.list li small {
+  color: var(--muted);
+}
+
+.list li.empty {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.list li button {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.list li button:hover {
+  color: var(--danger);
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.stat {
+  background: var(--panel-2);
+  border-radius: 8px;
+  padding: 6px 4px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat.wide {
+  grid-column: span 2;
+}
+
+.stat b {
+  font-size: 13px;
+  color: var(--accent);
+}
+
+.stat span {
+  font-size: 9.5px;
+  color: var(--muted);
+}
+
+.title-preview {
+  margin: 4px 0 8px;
+  padding: 10px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(255, 138, 31, 0.18), rgba(255, 202, 40, 0.08));
+  border: 1px solid rgba(255, 138, 31, 0.4);
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ach-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ach-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: var(--panel-2);
+}
+
+.ach-list li.off {
+  opacity: 0.5;
+}
+
+.ach-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.ach-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  font-size: 11px;
+}
+
+.ach-body small {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.ach-title {
+  text-align: right;
+  font-size: 11px;
+  color: var(--accent);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.ach-title small {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.identity-card .id-head {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.identity-card .id-shell {
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+}
+
+.identity-card .id-shell svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Portrait = resting face: the expression layers only exist for the live pet. */
+.identity-card .id-shell .face {
+  display: none;
+}
+
+.identity-card .id-shell .eye {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: idleBlink 5.2s ease-in-out infinite;
+}
+
+.identity-card h3 {
+  margin: 0 0 2px;
+  font-size: 14px;
+}
+
+.identity-card .archetype {
+  margin: 0 0 4px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.identity-card .voice-tag {
+  margin: 0;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.axes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 12px;
+  margin: 10px 0;
+}
+
+.axis {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.axis .bar {
+  height: 5px;
+  border-radius: 3px;
+  background: var(--panel-2);
+  overflow: hidden;
+}
+
+.axis .bar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #e06700, var(--accent));
+  border-radius: 3px;
+}
+
+.specs {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px 10px;
+  margin: 8px 0;
+  font-size: 11px;
+}
+
+.specs dt {
+  color: var(--muted);
+}
+
+.specs dd {
+  margin: 0;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.traits span {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 138, 31, 0.14);
+  color: var(--text);
+}
+
+.credit {
+  flex-shrink: 0;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+  font-size: 10px;
+  color: var(--muted);
+  text-align: center;
 }

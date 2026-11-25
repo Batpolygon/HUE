@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="600" viewBox="0 0 1280 600">
+<style>
+  text { font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
+  .eye { transform-box: fill-box; transform-origin: 50% 50%; animation: blink 5.2s ease-in-out infinite; }
+  .led { animation: led 3.2s ease-in-out infinite; }
+  @keyframes blink { 0%, 90%, 100% { transform: scale(1, 1); } 93%, 95% { transform: scale(1, 0.15); } }
+  @keyframes led { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+</style>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0d1118"/><stop offset="1" stop-color="#161d2b"/></linearGradient>
+  <filter id="ds" x="-25%" y="-25%" width="150%" height="160%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.45"/></filter>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="18"/></filter>
+  
+</defs>
+<rect x="1" y="1" width="1278" height="598" rx="22" fill="url(#bg)" stroke="#263042" stroke-width="2"/>
+
+  <text x="640" y="52" text-anchor="middle" font-size="24" font-weight="700" fill="#f2f4f8">Architecture de la V2</text>
+
+  <text x="50" y="96" font-size="14" font-weight="700" fill="#5ec8ff" letter-spacing="1.5">INTERFACE · TYPESCRIPT + VITE (WEBVIEW2)</text>
+  <g><rect x="40" y="110" width="360" height="128" rx="14" fill="#161c28" stroke="#263042"/>
+    <rect x="40" y="124" width="4" height="100" rx="2" fill="#5ec8ff"/>
+    <text x="60" y="140" font-size="16.5" font-weight="700" fill="#f2f4f8">Fenêtre HUE</text>
+    <text x="60" y="164" font-size="14" fill="#8a95a8">Coque SVG, yeux, expressions, particules</text><text x="60" y="185" font-size="14" fill="#8a95a8">Ressort squash &amp; stretch (60 FPS)</text><text x="60" y="206" font-size="14" fill="#8a95a8">Discussion, micro, glisser-déposer</text></g>
+  <g><rect x="40" y="254" width="360" height="86" rx="14" fill="#161c28" stroke="#263042"/>
+    <rect x="40" y="268" width="4" height="58" rx="2" fill="#5ec8ff"/>
+    <text x="60" y="284" font-size="16.5" font-weight="700" fill="#f2f4f8">Bulle de dialogue</text>
+    <text x="60" y="308" font-size="14" fill="#8a95a8">Fenêtre séparée, collée au-dessus de lui</text></g>
+  <g><rect x="40" y="356" width="360" height="86" rx="14" fill="#161c28" stroke="#263042"/>
+    <rect x="40" y="370" width="4" height="58" rx="2" fill="#5ec8ff"/>
+    <text x="60" y="386" font-size="16.5" font-weight="700" fill="#f2f4f8">Paramètres</text>
+    <text x="60" y="410" font-size="14" fill="#8a95a8">Général · Toi · IA · Voix · Succès · Identité</text></g>
+  <g><rect x="40" y="458" width="360" height="86" rx="14" fill="#161c28" stroke="#263042"/>
+    <rect x="40" y="472" width="4" height="58" rx="2" fill="#5ec8ff"/>
+    <text x="60" y="488" font-size="16.5" font-weight="700" fill="#f2f4f8">Voix Animalese</text>
+    <text x="60" y="512" font-size="14" fill="#8a95a8">Web Audio : hauteur et timbre selon le PC</text></g>
+
+  <rect x="440" y="110" width="120" height="434" rx="14" fill="#1a2232" stroke="#263042"/>
+  <text x="500" y="138" text-anchor="middle" font-size="15" font-weight="700" fill="#f2f4f8">Tauri 2</text>
+  <text x="500" y="158" text-anchor="middle" font-size="13" fill="#8a95a8">IPC</text>
+  <g stroke="#c3cad6" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M412 230 H588"/><path d="M576 222 L588 230 L576 238"/>
+    <path d="M588 330 H412"/><path d="M424 322 L412 330 L424 338"/>
+    <path d="M412 430 H588"/><path d="M576 422 L588 430 L576 438"/>
+  </g>
+  <text x="500" y="214" text-anchor="middle" font-size="12" fill="#8a95a8">souris, messages</text>
+  <text x="500" y="314" text-anchor="middle" font-size="12" fill="#8a95a8">hue-tick 30/s</text>
+  <text x="500" y="356" text-anchor="middle" font-size="12" fill="#8a95a8">répliques, chat</text>
+  <text x="500" y="414" text-anchor="middle" font-size="12" fill="#8a95a8">fichiers, voix</text>
+
+  <text x="610" y="96" font-size="14" font-weight="700" fill="#ff8a1f" letter-spacing="1.5">CŒUR · RUST</text>
+  <g><rect x="600" y="110" width="310" height="108" rx="14" fill="#161c28" stroke="#263042"/>
+    <rect x="600" y="124" width="4" height="80" rx="2" fill="#ff8a1f"/>
+    <text x="620" y="140" font-size="16.5" font-weight="700" fill="#f2f4f8">Physique · 60 Hz</text>
+    <text x="620" y="164" font-size="14" fill="#8a95a8">Marche, lancers, rebonds, regard</text><text x="620" y="185" font-size="14" fill="#8a95a8">Caresses au survol, tournis</text></g>
+  <g><rect x="926" y="110" width="314" height="108" rx="14" fill="#161c28" stroke="#263042"/>
+    <rect x="926" y="124" width="4" height="80" rx="2" fill="#ff8a1f"/>
+    <text x="946" y="140" font-size="16.5" font-weight="700" fill="#f2f4f8">Battement · 250 ms</text>
+    <text x="946" y="164" font-size="14" fill="#8a95a8">Détecte freezes et lags</text><text x="946" y="185" font-size="14" fill="#8a95a8">Sortie de veille</text></g>
+  <g><rect x="600" y="230" width="310" height="108" rx="14" fill="#161c28" stroke="#263042"/>
+    <rect x="600" y="244" width="4" height="80" rx="2" fill="#ff8a1f"/>
+    <text x="620" y="260" font-size="16.5" font-weight="700" fill="#f2f4f8">Cerveau · 1 Hz</text>
+    <text x="620" y="284" font-size="14" fill="#8a95a8">Humeur, répliques, sieste</text><text x="620" y="305" font-size="14" fill="#8a95a8">Succès, fêtes, anniversaires</text></g>
+  <g><rect x="926" y="230" width="314" height="108" rx="14" fill="#161c28" stroke="#263042"/>
+    <rect x="926" y="244" width="4" height="80" rx="2" fill="#ff8a1f"/>
+    <text x="946" y="260" font-size="16.5" font-weight="700" fill="#f2f4f8">IA</text>
+    <text x="946" y="284" font-size="14" fill="#8a95a8">LLM local (llama.cpp) ou API</text><text x="946" y="305" font-size="14" fill="#8a95a8">Outils + RAG sur tes documents</text></g>
+  <g><rect x="600" y="350" width="310" height="108" rx="14" fill="#161c28" stroke="#263042"/>
+    <rect x="600" y="364" width="4" height="80" rx="2" fill="#ff8a1f"/>
+    <text x="620" y="380" font-size="16.5" font-weight="700" fill="#f2f4f8">Capteurs</text>
+    <text x="620" y="404" font-size="14" fill="#8a95a8">Matériel, stats en direct</text><text x="620" y="425" font-size="14" fill="#8a95a8">Événements Windows, mode discret</text></g>
+  <g><rect x="926" y="350" width="314" height="108" rx="14" fill="#161c28" stroke="#263042"/>
+    <rect x="926" y="364" width="4" height="80" rx="2" fill="#ff8a1f"/>
+    <text x="946" y="380" font-size="16.5" font-weight="700" fill="#f2f4f8">Dictée Whisper</text>
+    <text x="946" y="404" font-size="14" fill="#8a95a8">whisper.cpp en local (base / small)</text><text x="946" y="425" font-size="14" fill="#8a95a8">ou API distante</text></g>
+  <g><rect x="600" y="470" width="640" height="96" rx="14" fill="#161c28" stroke="#263042"/>
+    <rect x="600" y="484" width="4" height="68" rx="2" fill="#9b7bff"/>
+    <text x="620" y="500" font-size="16.5" font-weight="700" fill="#f2f4f8">Mémoire persistante</text>
+    <text x="620" y="524" font-size="14" fill="#8a95a8">memory.json · documents.json · settings.json (dans %APPDATA%\hue)</text><text x="620" y="545" font-size="14" fill="#8a95a8">Clé API rangée dans le Gestionnaire d'identification Windows</text></g>
+  
+</svg>

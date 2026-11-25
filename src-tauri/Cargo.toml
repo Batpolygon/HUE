@@ -1,6 +1,6 @@
 [package]
 name = "hue"
-version = "1.0.0"
+version = "2.0.0"
 description = "HUE — living PC companion"
 authors = ["Batpolygon"]
 edition = "2021"
@@ -21,13 +21,16 @@ sysinfo = "0.33"
 sha2 = "0.10"
 hex = "0.4"
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "time", "sync"] }
-reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls", "stream"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls", "stream", "multipart"] }
 chrono = { version = "0.4", features = ["serde"] }
 parking_lot = "0.12"
 dirs = "6"
 hostname = "0.4"
 futures-util = "0.3"
 rand = "0.8"
+cpal = "0.15"
+lopdf = "0.34"
+zip = { version = "2", default-features = false, features = ["deflate"] }
 
 [target.'cfg(windows)'.dependencies]
 windows = { version = "0.58", features = [
@@ -37,6 +40,9 @@ windows = { version = "0.58", features = [
   "Win32_System_SystemInformation",
   "Win32_UI_WindowsAndMessaging",
   "Win32_Graphics_Gdi",
+  "Win32_UI_Input_KeyboardAndMouse",
+  "Win32_Security",
+  "Win32_Security_Credentials",
 ] }
 
 [profile.release]

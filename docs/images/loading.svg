@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="330" viewBox="0 0 1100 330">
+<style>
+  text { font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
+  .eye { transform-box: fill-box; transform-origin: 50% 50%; animation: blink 5.2s ease-in-out infinite; }
+  .led { animation: led 3.2s ease-in-out infinite; }
+  @keyframes blink { 0%, 90%, 100% { transform: scale(1, 1); } 93%, 95% { transform: scale(1, 0.15); } }
+  @keyframes led { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+
+      .ghost { filter: drop-shadow(0 0 6px rgba(94, 200, 255, 0.55)); animation: gfloat 2.6s ease-in-out infinite; }
+      .ghost-outline { animation: gdash 1.8s linear infinite; }
+      .ghost-scan { animation: gscan 2.4s linear infinite; }
+      .ghost-spinner { transform-box: view-box; transform-origin: 60px 46px; animation: gspin 0.9s linear infinite; }
+      .ghost-text { animation: gtext 1.6s ease-in-out infinite; font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
+      .ghost-bar { animation: gbar 1.1s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate; }
+      @keyframes gfloat { 0%, 100% { opacity: 0.8; transform: translateY(0); } 50% { opacity: 0.96; transform: translateY(-2.5px); } }
+      @keyframes gdash { to { stroke-dashoffset: -15; } }
+      @keyframes gscan { from { transform: translateY(0); } to { transform: translateY(96px); } }
+      @keyframes gspin { to { transform: rotate(360deg); } }
+      @keyframes gtext { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+      @keyframes gbar { from { transform: translateX(0); } to { transform: translateX(26px); } }</style>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0d1118"/><stop offset="1" stop-color="#161d2b"/></linearGradient>
+  <filter id="ds" x="-25%" y="-25%" width="150%" height="160%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.45"/></filter>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="18"/></filter>
+  
+</defs>
+<rect x="1" y="1" width="1098" height="328" rx="22" fill="url(#bg)" stroke="#263042" stroke-width="2"/>
+
+  <text x="550" y="54" text-anchor="middle" font-size="24" font-weight="700" fill="#f2f4f8">Au démarrage : un hologramme, puis sa vraie coque</text>
+  <svg x="150" y="80" width="200" height="200" viewBox="0 0 120 120" overflow="visible"><g class="ghost">
+  <defs>
+    <linearGradient id="ghostGrad-21" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5ec8ff" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#5ec8ff" stop-opacity="0.08"/>
+    </linearGradient>
+    <clipPath id="ghostClip-21"><rect x="18" y="22" width="84" height="76" rx="16"/></clipPath>
+    <clipPath id="ghostScreen-21"><rect x="28" y="34" width="64" height="40" rx="8"/></clipPath>
+  </defs>
+  <g id="rig-21">
+    <rect x="18" y="22" width="84" height="76" rx="16" fill="url(#ghostGrad-21)" stroke="#5ec8ff" stroke-width="1.8" stroke-opacity="0.8" stroke-dasharray="5 2.5" class="ghost-outline"/>
+    <g clip-path="url(#ghostClip-21)"><rect class="ghost-scan" x="18" y="12" width="84" height="9" fill="#5ec8ff" opacity="0.25"/></g>
+    <g fill="#5ec8ff" opacity="0.35"><rect x="27.0" y="97.0" width="14.0" height="5.0" rx="2.0"/><rect x="79.0" y="97.0" width="14.0" height="5.0" rx="2.0"/></g>
+    <rect x="28" y="34" width="64" height="40" rx="8" fill="#04101a" fill-opacity="0.78" stroke="#5ec8ff" stroke-opacity="0.55" stroke-width="1"/>
+    <g clip-path="url(#ghostScreen-21)">
+      <g class="ghost-spinner">
+        <circle cx="60" cy="46" r="6" fill="none" stroke="#5ec8ff" stroke-opacity="0.22" stroke-width="2.2"/>
+        <path d="M60 40 A6 6 0 0 1 66 46" fill="none" stroke="#5ec8ff" stroke-width="2.2" stroke-linecap="round"/>
+      </g>
+      <text x="60" y="62" text-anchor="middle" font-size="6.6" font-weight="700" fill="#5ec8ff" class="ghost-text">HUE se charge…</text>
+      <rect x="40" y="65.5" width="40" height="2.4" rx="1.2" fill="#5ec8ff" opacity="0.2"/>
+      <rect class="ghost-bar" x="40" y="65.5" width="14" height="2.4" rx="1.2" fill="#5ec8ff"/>
+    </g>
+  </g>
+</g></svg>
+  <text x="250" y="304" text-anchor="middle" font-size="15.5" fill="#8a95a8">Pendant l'analyse du matériel</text>
+  <g fill="none" stroke="#5ec8ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.9">
+    <path d="M430 180 H640"/><path d="M624 166 L642 180 L624 194"/>
+  </g>
+  <text x="535" y="164" text-anchor="middle" font-size="15" font-weight="600" fill="#5ec8ff">matérialisation</text>
+  <circle cx="850" cy="180" r="96" fill="#5ec8ff" opacity="0.16" filter="url(#glow)"/>
+  <svg x="750" y="80" width="200" height="200.0" viewBox="0 0 120 120" overflow="visible"><g filter="url(#ds)">
+  <defs>
+    <linearGradient id="bodyGrad-22" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2f3a"/>
+      <stop offset="1" stop-color="#1d2129"/>
+    </linearGradient>
+    <clipPath id="bodyClip-22"><rect x="21.5" y="10.0" width="77.0" height="94.0" rx="10.0"/></clipPath>
+    <clipPath id="screenClip-22"><rect x="28" y="34" width="64" height="40" rx="8"/></clipPath>
+  </defs>
+  <g id="rig-22">
+  <g id="shell-22">
+    <rect x="17.519999999999996" y="34" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="96.48" y="34" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="17.519999999999996" y="43" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="96.48" y="43" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="17.519999999999996" y="52" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="96.48" y="52" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="17.519999999999996" y="61" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="96.48" y="61" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="17.519999999999996" y="70" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="96.48" y="70" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="17.519999999999996" y="79" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="96.48" y="79" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="17.519999999999996" y="88" width="6" height="4.5" rx="1.5" fill="#1d2129"/><rect x="96.48" y="88" width="6" height="4.5" rx="1.5" fill="#1d2129"/>
+    
+    <g fill="#1d2129"><rect x="30.5" y="103.0" width="14.0" height="5.0" rx="2.0"/><rect x="75.5" y="103.0" width="14.0" height="5.0" rx="2.0"/></g>
+    <rect x="21.5" y="10.0" width="77.0" height="94.0" rx="10.0" fill="url(#bodyGrad-22)" stroke="#3d4555" stroke-width="2.6"/>
+    <g clip-path="url(#bodyClip-22)" opacity="0.2"><line x1="0" y1="0" x2="0" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="0" x2="120" y2="0" stroke="#3d4555" stroke-width="0.8"/><line x1="10" y1="0" x2="10" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="10" x2="120" y2="10" stroke="#3d4555" stroke-width="0.8"/><line x1="20" y1="0" x2="20" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="20" x2="120" y2="20" stroke="#3d4555" stroke-width="0.8"/><line x1="30" y1="0" x2="30" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="30" x2="120" y2="30" stroke="#3d4555" stroke-width="0.8"/><line x1="40" y1="0" x2="40" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="40" x2="120" y2="40" stroke="#3d4555" stroke-width="0.8"/><line x1="50" y1="0" x2="50" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="50" x2="120" y2="50" stroke="#3d4555" stroke-width="0.8"/><line x1="60" y1="0" x2="60" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="60" x2="120" y2="60" stroke="#3d4555" stroke-width="0.8"/><line x1="70" y1="0" x2="70" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="70" x2="120" y2="70" stroke="#3d4555" stroke-width="0.8"/><line x1="80" y1="0" x2="80" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="80" x2="120" y2="80" stroke="#3d4555" stroke-width="0.8"/><line x1="90" y1="0" x2="90" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="90" x2="120" y2="90" stroke="#3d4555" stroke-width="0.8"/><line x1="100" y1="0" x2="100" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="100" x2="120" y2="100" stroke="#3d4555" stroke-width="0.8"/><line x1="110" y1="0" x2="110" y2="120" stroke="#3d4555" stroke-width="0.8"/><line x1="0" y1="110" x2="120" y2="110" stroke="#3d4555" stroke-width="0.8"/></g>
+    <rect x="26.519999999999996" y="30" width="2.6" height="66" rx="1.3" fill="#76b900" class="accent-strip"/><circle cx="87.48" cy="20" r="3.4" fill="none" stroke="#76b900" stroke-width="1.6"/><line x1="87.48" y1="16.8" x2="87.48" y2="19.6" stroke="#76b900" stroke-width="1.6" stroke-linecap="round"/><line x1="39.0" y1="82" x2="39.0" y2="94" stroke="#1d2129" stroke-width="1.6" stroke-linecap="round"/><line x1="45.0" y1="82" x2="45.0" y2="94" stroke="#1d2129" stroke-width="1.6" stroke-linecap="round"/><line x1="51.0" y1="82" x2="51.0" y2="94" stroke="#1d2129" stroke-width="1.6" stroke-linecap="round"/><line x1="57.0" y1="82" x2="57.0" y2="94" stroke="#1d2129" stroke-width="1.6" stroke-linecap="round"/><line x1="63.0" y1="82" x2="63.0" y2="94" stroke="#1d2129" stroke-width="1.6" stroke-linecap="round"/><line x1="69.0" y1="82" x2="69.0" y2="94" stroke="#1d2129" stroke-width="1.6" stroke-linecap="round"/><line x1="75.0" y1="82" x2="75.0" y2="94" stroke="#1d2129" stroke-width="1.6" stroke-linecap="round"/><line x1="81.0" y1="82" x2="81.0" y2="94" stroke="#1d2129" stroke-width="1.6" stroke-linecap="round"/><circle class="led" style="animation-delay:0.0s" cx="34.5" cy="20" r="1.4" fill="#76b900"/><circle class="led" style="animation-delay:0.7s" cx="39.5" cy="20" r="1.4" fill="#76b900"/><circle class="led" style="animation-delay:1.4s" cx="44.5" cy="20" r="1.4" fill="#76b900"/>
+    <rect x="26" y="32" width="68" height="44" rx="9.5" fill="#1d2129"/>
+  </g>
+  <rect x="28" y="34" width="64" height="40" rx="8" fill="#0b0d12"/>
+  <g id="eyes-22" clip-path="url(#screenClip-22)">
+    
+    <g class="shown-face face-happy" fill="none" stroke="#ff8a1f" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M38 58 Q46 45 54 58"/><path d="M66 58 Q74 45 82 58"/>
+    </g>
+    
+    
+    
+    
+    
+    
+    
+    <g id="blush-22" opacity="0.35">
+      <ellipse cx="36" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+      <ellipse cx="84" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+    </g>
+  </g>
+  <rect x="30" y="35.5" width="22" height="3" rx="1.5" fill="#ffffff" opacity="0.06" pointer-events="none"/>
+  
+  <g id="decor-22"></g>
+  </g>
+</g></svg>
+  <text x="850" y="304" text-anchor="middle" font-size="15.5" fill="#8a95a8">Sa coque unique apparaît</text>
+  
+</svg>

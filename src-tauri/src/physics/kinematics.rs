@@ -2,12 +2,21 @@ use rand::Rng;
 use serde::{Deserialize, Serialize};
 use std::time::{Duration, Instant};
 
+/// Per-frame factors below are expressed at this reference rate and rescaled by `dt`,
+/// so the feel stays identical whatever the physics tick is.
+const REF_HZ: f64 = 30.0;
 const FRICTION: f64 = 0.985;
 const BOUNCE: f64 = 0.72;
 const STOP_EPS: f64 = 8.0;
 const GRAVITY: f64 = 0.0;
-/// Soft spring-back after an edge hit (higher = longer visible squash).
-const SQUASH_DECAY: f64 = 0.92;
+/// How fast the squash target relaxes after a hit (per 1/30 s). Kept short: the UI spring
+/// chases it and produces the overshoot/jelly, so a slow decay here would only feel sticky.
+const SQUASH_DECAY: f64 = 0.72;
+/// Deformation at the hardest impact (0.3 → 0.70 × 1.22). The UI spring adds the jelly.
+const SQUASH_MAX: f64 = 0.3;
+const SQUASH_MIN: f64 = 0.05;
+/// Release speed cap (px/s) — also the impact that gives `SQUASH_MAX`.
+const TOSS_MAX_SPEED: f64 = 2400.0;
 const CLICK_MAX_MS: u128 = 250;
 const CLICK_MAX_DIST: f64 = 8.0;
 /// Visible strip above the taskbar when peeked — full face screen must stay readable.
@@ -34,8 +43,14 @@ const SEEK_SPEED: f64 = 110.0;
 /// Soft place instead of toss when release speed is below this (px/s).
 const SOFT_DROP_SPEED: f64 = 380.0;
 /// Gentle stroke speed band for petting (px/s).
-const PET_SPEED_MAX: f64 = 320.0;
-const PET_STROKE_PX: f64 = 70.0;
+/// Hover-petting: path length (px) and back-and-forth passes needed.
+const HOVER_PET_PATH: f64 = 220.0;
+const HOVER_PET_PASSES: u32 = 3;
+const HOVER_WINDOW: Duration = Duration::from_millis(3500);
+const HOVER_LEAVE_RESET: Duration = Duration::from_millis(1200);
+const PET_REPEAT: Duration = Duration::from_millis(2500);
+/// Visual pet inside its window (SVG is 148 px).
+const PET_VISUAL: f64 = 148.0;
 const DOUBLE_CLICK_MS: u128 = 420;
 const MICRO_IDLE_MIN: Duration = Duration::from_secs(12);
 const MICRO_IDLE_MAX: Duration = Duration::from_secs(28);
@@ -54,6 +69,18 @@ pub enum HueState {
     Panic,
     Joy,
     Dizzy,
+}
+
+/// Things that happened to the body, drained by the brain loop (stats, lines, mood).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BodySignal {
+    Pet,
+    DoubleClick,
+    SoftDrop,
+    Toss,
+    Dizzy,
+    Peek,
+    WokenByClick,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -84,6 +111,13 @@ pub struct TickPayload {
     pub dizzy: bool,
     /// Horizontal facing for walk/mirror (−1 left, +1 right).
     pub walk_dir: f64,
+    pub sleeping: bool,
+    /// Short eye-shape override: love | happy | wide | x | sad | sleepy | proud.
+    pub expression: Option<&'static str>,
+    /// Short body animation: yawn | stretch | wiggle | look | hop | dance.
+    pub micro: Option<&'static str>,
+    pub valence: f64,
+    pub energy: f64,
 }
 
 #[derive(Debug, Clone)]
@@ -118,8 +152,22 @@ pub struct PhysicsBody {
     pub want_hud: Option<bool>,
     /// Just entered dizzy — chatter can announce it once.
     pub dizzy_just_started: bool,
-    /// Forced chatter cue: "pet" | "double" | "soft_drop".
-    pub want_chatter_kind: Option<&'static str>,
+    pub signals: Vec<BodySignal>,
+    pub sleeping: bool,
+    /// Set by the brain from the mood (walk speed multiplier).
+    pub speed_factor: f64,
+    pub valence: f64,
+    pub energy: f64,
+    expression: Option<(&'static str, Instant)>,
+    micro: Option<(&'static str, Instant)>,
+    hover_inside: bool,
+    hover_last: Option<(f64, f64)>,
+    hover_path: f64,
+    hover_passes: u32,
+    hover_dir: f64,
+    hover_start: Instant,
+    hover_left_at: Option<Instant>,
+    last_pet_at: Option<Instant>,
     walk_dir: f64,
     drag_offset_x: f64,
     drag_offset_y: f64,
@@ -143,8 +191,6 @@ pub struct PhysicsBody {
     last_interaction: Instant,
     next_seek_at: Instant,
     seeking: bool,
-    pet_stroke_px: f64,
-    pet_triggered: bool,
     last_short_click_ms: u128,
     next_micro_at: Instant,
 }
@@ -169,7 +215,21 @@ impl PhysicsBody {
             gaze_y: 0.0,
             want_hud: None,
             dizzy_just_started: false,
-            want_chatter_kind: None,
+            signals: Vec::new(),
+            sleeping: false,
+            speed_factor: 1.0,
+            valence: 0.3,
+            energy: 0.6,
+            expression: None,
+            micro: None,
+            hover_inside: false,
+            hover_last: None,
+            hover_path: 0.0,
+            hover_passes: 0,
+            hover_dir: 0.0,
+            hover_start: Instant::now(),
+            hover_left_at: None,
+            last_pet_at: None,
             walk_dir: 1.0,
             drag_offset_x: 0.0,
             drag_offset_y: 0.0,
@@ -192,8 +252,6 @@ impl PhysicsBody {
             last_interaction: Instant::now(),
             next_seek_at: Instant::now() + IDLE_SEEK_AFTER,
             seeking: false,
-            pet_stroke_px: 0.0,
-            pet_triggered: false,
             last_short_click_ms: 0,
             next_micro_at: Instant::now()
                 + Duration::from_millis(
@@ -254,6 +312,134 @@ impl PhysicsBody {
             } else {
                 self.walk_dir.signum()
             },
+            sleeping: self.sleeping,
+            expression: self
+                .expression
+                .filter(|(_, until)| Instant::now() < *until)
+                .map(|(e, _)| e),
+            micro: self
+                .micro
+                .filter(|(_, until)| Instant::now() < *until)
+                .map(|(m, _)| m),
+            valence: self.valence,
+            energy: self.energy,
+        }
+    }
+
+    fn walk_speed(&self) -> f64 {
+        WALK_SPEED * self.speed_factor.clamp(0.5, 1.5)
+    }
+
+    /// Show an eye-shape for `ms` milliseconds.
+    pub fn set_face(&mut self, face: &'static str, ms: u64) {
+        self.expression = Some((face, Instant::now() + Duration::from_millis(ms)));
+    }
+
+    pub fn start_micro(&mut self, micro: &'static str, ms: u64) {
+        self.micro = Some((micro, Instant::now() + Duration::from_millis(ms)));
+    }
+
+    pub fn fall_asleep(&mut self) {
+        if self.sleeping || matches!(self.state, HueState::Dragging | HueState::Interacting) {
+            return;
+        }
+        self.sleeping = true;
+        self.seeking = false;
+        self.vx = 0.0;
+        self.vy = 0.0;
+        if !self.peeking {
+            self.state = HueState::Idle;
+        }
+        self.start_micro("yawn", 1600);
+    }
+
+    pub fn wake_up(&mut self) {
+        if !self.sleeping {
+            return;
+        }
+        self.sleeping = false;
+        self.set_face("sleepy", 1800);
+        self.start_micro("stretch", 1400);
+        self.touch_interaction();
+    }
+
+    /// Mouse passing back and forth over the pet (no button) = a caress.
+    pub fn track_hover(&mut self, cx: f64, cy: f64) {
+        if self.pointer_down_ms.is_some() || self.state == HueState::Dragging {
+            self.hover_inside = false;
+            self.hover_last = None;
+            return;
+        }
+        let now = Instant::now();
+        let w = self.width.max(PET_WINDOW);
+        let left = self.x + (w - PET_VISUAL) * 0.5 + 10.0;
+        let top = self.y + if self.width > PET_WINDOW { 8.0 } else { 10.0 } + 8.0;
+        let inside = cx >= left && cx <= left + PET_VISUAL - 20.0 && cy >= top && cy <= top + PET_VISUAL - 16.0;
+
+        if !inside {
+            if self.hover_inside {
+                self.hover_left_at = Some(now);
+            }
+            self.hover_inside = false;
+            self.hover_last = None;
+            if self
+                .hover_left_at
+                .map(|t| now.duration_since(t) > HOVER_LEAVE_RESET)
+                .unwrap_or(true)
+            {
+                self.hover_path = 0.0;
+                self.hover_passes = 0;
+                self.hover_dir = 0.0;
+            }
+            return;
+        }
+
+        if !self.hover_inside {
+            // (Re-)entering counts as one pass.
+            if self.hover_passes == 0 || now.duration_since(self.hover_start) > HOVER_WINDOW {
+                self.hover_start = now;
+                self.hover_path = 0.0;
+                self.hover_passes = 0;
+            }
+            self.hover_passes += 1;
+            self.hover_inside = true;
+        }
+        if let Some((px, py)) = self.hover_last {
+            let dx = cx - px;
+            let dy = cy - py;
+            self.hover_path += (dx * dx + dy * dy).sqrt();
+            if dx.abs() > 2.5 {
+                let dir = dx.signum();
+                if self.hover_dir != 0.0 && dir != self.hover_dir {
+                    self.hover_passes += 1;
+                }
+                self.hover_dir = dir;
+            }
+        }
+        self.hover_last = Some((cx, cy));
+
+        if now.duration_since(self.hover_start) > HOVER_WINDOW {
+            self.hover_start = now;
+            self.hover_path = 0.0;
+            self.hover_passes = 1;
+        }
+        let cooled = self
+            .last_pet_at
+            .map(|t| now.duration_since(t) > PET_REPEAT)
+            .unwrap_or(true);
+        if cooled && self.hover_path >= HOVER_PET_PATH && self.hover_passes >= HOVER_PET_PASSES {
+            self.last_pet_at = Some(now);
+            self.hover_path = 0.0;
+            self.hover_passes = 0;
+            self.hover_start = now;
+            self.signals.push(BodySignal::Pet);
+            if self.sleeping {
+                self.wake_up();
+            }
+            self.set_face("love", 2600);
+            self.start_micro("wiggle", 900);
+            self.hover_hop();
+            self.touch_interaction();
         }
     }
 
@@ -315,7 +501,7 @@ impl PhysicsBody {
         self.state = HueState::Walking;
         self.y = Self::taskbar_y(area, self.height);
         if self.vx.abs() < 10.0 {
-            self.vx = WALK_SPEED * self.walk_dir;
+            self.vx = self.walk_speed() * self.walk_dir;
         }
         self.vy = 0.0;
         // Resting on the taskbar is not an impact — keep a clean silhouette at spawn.
@@ -329,8 +515,8 @@ impl PhysicsBody {
         }
         self.state = HueState::Walking;
         if self.vx.abs() < 10.0 && self.vy.abs() < 10.0 {
-            self.vx = WALK_SPEED * self.walk_dir;
-            self.vy = WALK_SPEED * 0.35;
+            self.vx = self.walk_speed() * self.walk_dir;
+            self.vy = self.walk_speed() * 0.35;
         }
         self.squash_x = 1.0;
         self.squash_y = 1.0;
@@ -351,6 +537,11 @@ impl PhysicsBody {
         self.touch_interaction();
         match phase {
             PointerPhase::Down => {
+                if self.sleeping {
+                    self.sleeping = false;
+                    self.set_face("sleepy", 1500);
+                    self.signals.push(BodySignal::WokenByClick);
+                }
                 self.width = PET_WINDOW;
                 self.height = PET_WINDOW;
                 self.was_peeking_on_down = self.peeking;
@@ -372,8 +563,6 @@ impl PhysicsBody {
                 self.last_pointer_y = screen_y;
                 self.last_pointer_ms = now_ms;
                 self.moved_while_down = false;
-                self.pet_stroke_px = 0.0;
-                self.pet_triggered = false;
                 self.drag_offset_x = screen_x - self.x;
                 self.drag_offset_y = screen_y - self.y;
                 self.vx = 0.0;
@@ -403,17 +592,6 @@ impl PhysicsBody {
                 let ny = screen_y - self.drag_offset_y;
                 self.vx = (nx - self.x) / dt;
                 self.vy = (ny - self.y) / dt;
-                let step = ((nx - self.x).powi(2) + (ny - self.y).powi(2)).sqrt();
-                let speed = (self.vx * self.vx + self.vy * self.vy).sqrt();
-                // Gentle stroke = pet (not a hard shake / throw wind-up).
-                if speed > 20.0 && speed < PET_SPEED_MAX {
-                    self.pet_stroke_px += step;
-                    if !self.pet_triggered && self.pet_stroke_px >= PET_STROKE_PX {
-                        self.pet_triggered = true;
-                        self.want_chatter_kind = Some("pet");
-                        self.hover_hop();
-                    }
-                }
                 self.x = nx;
                 self.y = ny;
                 self.last_pointer_x = screen_x;
@@ -449,7 +627,8 @@ impl PhysicsBody {
                         self.facing_user = true;
                         self.want_hud = None;
                         self.hud_should_close = false;
-                        self.want_chatter_kind = Some("double");
+                        self.signals.push(BodySignal::DoubleClick);
+                        self.set_face("happy", 1800);
                         self.state = HueState::Idle;
                         self.hover_hop();
                         self.squash_x = 1.15;
@@ -491,6 +670,7 @@ impl PhysicsBody {
                 // Dropped in the bottom-right dock zone → tuck automatically
                 if Self::near_dock_corner(area, self.x, self.y, self.width, self.height) {
                     self.enter_peek(area);
+                    self.signals.push(BodySignal::Peek);
                     self.want_hud = Some(false);
                     return;
                 }
@@ -500,7 +680,7 @@ impl PhysicsBody {
                 self.want_hud = Some(false);
                 self.peeking = false;
 
-                if speed < SOFT_DROP_SPEED || self.pet_triggered {
+                if speed < SOFT_DROP_SPEED {
                     // Soft place — settle without tossing.
                     self.vx = 0.0;
                     self.vy = 0.0;
@@ -508,20 +688,17 @@ impl PhysicsBody {
                     self.facing_user = true;
                     self.squash_x = 1.05;
                     self.squash_y = 0.95;
-                    if self.want_chatter_kind.is_none() {
-                        self.want_chatter_kind = Some("soft_drop");
-                    }
-                    if self.pet_triggered && !self.is_dizzy() {
-                        self.set_expression(HueState::Joy);
-                    }
+                    self.signals.push(BodySignal::SoftDrop);
                     self.clamp_inside(area);
                     return;
                 }
 
                 // Throw / release elsewhere
-                self.vx = self.vx.clamp(-2400.0, 2400.0);
-                self.vy = self.vy.clamp(-2400.0, 2400.0);
+                self.vx = self.vx.clamp(-TOSS_MAX_SPEED, TOSS_MAX_SPEED);
+                self.vy = self.vy.clamp(-TOSS_MAX_SPEED, TOSS_MAX_SPEED);
                 self.state = HueState::Tossed;
+                self.signals.push(BodySignal::Toss);
+                self.set_face("wide", 1200);
                 self.facing_user = false;
                 self.clamp_inside(area);
             }
@@ -537,8 +714,10 @@ impl PhysicsBody {
     ) {
         use crate::config::MovementMode;
 
-        self.squash_x = 1.0 + (self.squash_x - 1.0) * SQUASH_DECAY;
-        self.squash_y = 1.0 + (self.squash_y - 1.0) * SQUASH_DECAY;
+        let frames = dt * REF_HZ;
+        let decay = SQUASH_DECAY.powf(frames);
+        self.squash_x = 1.0 + (self.squash_x - 1.0) * decay;
+        self.squash_y = 1.0 + (self.squash_y - 1.0) * decay;
         self.wobble_t += dt;
 
         // Faster dizzy recovery while tucked behind the taskbar.
@@ -591,6 +770,22 @@ impl PhysicsBody {
         }
 
         if self.state == HueState::Dragging || self.state == HueState::Interacting {
+            self.clamp_inside(area);
+            return;
+        }
+
+        if self.sleeping {
+            // Slow breathing in place.
+            let breath = (self.wobble_t * 1.6).sin();
+            self.vx = 0.0;
+            self.vy = 0.0;
+            self.squash_x = 1.0 + breath * 0.025;
+            self.squash_y = 1.0 - breath * 0.025;
+            self.gaze_x *= 0.9f64.powf(frames);
+            self.gaze_y += (0.35 - self.gaze_y) * (1.0 - 0.95f64.powf(frames));
+            if !matches!(self.state, HueState::Idle) && !self.peeking {
+                self.state = HueState::Idle;
+            }
             self.clamp_inside(area);
             return;
         }
@@ -669,27 +864,27 @@ impl PhysicsBody {
                     self.y = bar_y;
                     self.vy = 0.0;
                     if self.vx.abs() < 20.0 {
-                        self.vx = WALK_SPEED * self.walk_dir;
+                        self.vx = self.walk_speed() * self.walk_dir;
                     }
                     self.x += self.vx * dt;
                     if self.x <= min_x {
                         self.x = min_x;
                         self.walk_dir = 1.0;
-                        self.vx = WALK_SPEED;
-                        self.apply_edge_squash(true);
+                        self.vx = self.walk_speed();
+                        self.apply_edge_squash(true, self.walk_speed());
                     } else if self.x >= max_x {
                         self.x = max_x;
                         self.walk_dir = -1.0;
-                        self.vx = -WALK_SPEED;
-                        self.apply_edge_squash(true);
+                        self.vx = -self.walk_speed();
+                        self.apply_edge_squash(true, self.walk_speed());
                     }
                     self.facing_user = false;
                     return;
                 }
                 MovementMode::Fullscreen => {
                     if self.vx.abs() < 15.0 && self.vy.abs() < 15.0 {
-                        self.vx = WALK_SPEED * self.walk_dir;
-                        self.vy = WALK_SPEED * 0.4;
+                        self.vx = self.walk_speed() * self.walk_dir;
+                        self.vy = self.walk_speed() * 0.4;
                     }
                     self.x += self.vx * dt;
                     self.y += self.vy * dt;
@@ -697,19 +892,19 @@ impl PhysicsBody {
                         self.x = min_x;
                         self.vx = self.vx.abs();
                         self.walk_dir = 1.0;
-                        self.apply_edge_squash(true);
+                        self.apply_edge_squash(true, self.vx.abs());
                     } else if self.x >= max_x {
                         self.x = max_x;
                         self.vx = -self.vx.abs();
                         self.walk_dir = -1.0;
-                        self.apply_edge_squash(true);
+                        self.apply_edge_squash(true, self.vx.abs());
                     }
                     if self.y <= min_y {
                         self.y = min_y;
                         let impact = self.vy.abs();
                         self.vy = self.vy.abs();
                         if impact > 25.0 {
-                            self.apply_edge_squash(false);
+                            self.apply_edge_squash(false, impact);
                         }
                     } else if self.y >= max_y {
                         self.y = max_y;
@@ -717,7 +912,7 @@ impl PhysicsBody {
                         self.vy = -self.vy.abs();
                         // Ignore soft contact with the taskbar line (spawn / settle).
                         if impact > 25.0 {
-                            self.apply_edge_squash(false);
+                            self.apply_edge_squash(false, impact);
                         }
                     }
                     self.facing_user = false;
@@ -737,7 +932,7 @@ impl PhysicsBody {
             let impact = self.vx.abs();
             self.vx = -self.vx * BOUNCE;
             if impact > 40.0 {
-                self.apply_edge_squash(true);
+                self.apply_edge_squash(true, impact);
             }
             bounced = true;
         } else if self.x > max_x {
@@ -745,7 +940,7 @@ impl PhysicsBody {
             let impact = self.vx.abs();
             self.vx = -self.vx * BOUNCE;
             if impact > 40.0 {
-                self.apply_edge_squash(true);
+                self.apply_edge_squash(true, impact);
             }
             bounced = true;
         }
@@ -755,7 +950,7 @@ impl PhysicsBody {
             let impact = self.vy.abs();
             self.vy = -self.vy * BOUNCE;
             if impact > 40.0 {
-                self.apply_edge_squash(false);
+                self.apply_edge_squash(false, impact);
             }
             bounced = true;
         } else if self.y > max_y {
@@ -763,13 +958,14 @@ impl PhysicsBody {
             let impact = self.vy.abs();
             self.vy = -self.vy * BOUNCE;
             if impact > 40.0 {
-                self.apply_edge_squash(false);
+                self.apply_edge_squash(false, impact);
             }
             bounced = true;
         }
 
-        self.vx *= FRICTION;
-        self.vy *= FRICTION;
+        let friction = FRICTION.powf(frames);
+        self.vx *= friction;
+        self.vy *= friction;
 
         let speed = (self.vx * self.vx + self.vy * self.vy).sqrt();
         if speed < STOP_EPS {
@@ -791,14 +987,17 @@ impl PhysicsBody {
         self.clamp_inside(area);
     }
 
-    /// Squash/stretch into the wall: horizontal edge → compress X / stretch Y.
-    fn apply_edge_squash(&mut self, against_vertical_wall: bool) {
+    /// Squash/stretch into the wall, scaled by how hard it hit (sqrt so medium throws still
+    /// read). Vertical wall → compress X / stretch Y; floor or ceiling → the opposite.
+    fn apply_edge_squash(&mut self, against_vertical_wall: bool, impact: f64) {
+        let a = ((impact / TOSS_MAX_SPEED).clamp(0.0, 1.0).sqrt() * SQUASH_MAX).max(SQUASH_MIN);
+        let (squeeze, stretch) = (1.0 - a, 1.0 + a * 0.75);
         if against_vertical_wall {
-            self.squash_x = 0.52;
-            self.squash_y = 1.42;
+            self.squash_x = squeeze;
+            self.squash_y = stretch;
         } else {
-            self.squash_x = 1.42;
-            self.squash_y = 0.52;
+            self.squash_x = stretch;
+            self.squash_y = squeeze;
         }
     }
 
@@ -871,6 +1070,9 @@ impl PhysicsBody {
     }
 
     fn enter_dizzy(&mut self) {
+        if !self.is_dizzy() {
+            self.signals.push(BodySignal::Dizzy);
+        }
         let secs = rand::thread_rng().gen_range(DIZZY_SECS_MIN..=DIZZY_SECS_MAX);
         self.dizzy_until = Some(Instant::now() + Duration::from_secs(secs));
         self.dizzy_just_started = true;
@@ -900,7 +1102,7 @@ impl PhysicsBody {
     }
 
     fn maybe_micro_idle(&mut self) {
-        if self.seeking || self.is_dizzy() {
+        if self.seeking || self.is_dizzy() || self.sleeping {
             return;
         }
         if !matches!(self.state, HueState::Idle | HueState::Walking) {
@@ -911,16 +1113,23 @@ impl PhysicsBody {
         }
         self.schedule_next_micro();
         let mut rng = rand::thread_rng();
-        // Never randomize gaze here — it fights cursor tracking and looks glitchy from afar.
-        match rng.gen_range(0..2) {
-            0 => self.hover_hop(),
-            _ => {
-                if matches!(self.state, HueState::Idle) {
-                    self.set_expression(HueState::Joy);
-                } else {
-                    self.hover_hop();
-                }
-            }
+        // Mood picks the repertoire: tired machines yawn, happy ones wiggle.
+        let roll: f64 = rng.gen();
+        if self.energy < 0.35 && roll < 0.5 {
+            self.start_micro("yawn", 1600);
+            self.set_face("sleepy", 1600);
+        } else if self.valence > 0.45 && roll < 0.4 {
+            self.start_micro("wiggle", 1000);
+            self.set_face("happy", 1400);
+        } else if roll < 0.6 {
+            self.start_micro("look", 2200);
+        } else if roll < 0.75 {
+            self.start_micro("stretch", 1300);
+        } else if roll < 0.85 && self.energy > 0.7 {
+            self.start_micro("dance", 2200);
+        } else {
+            self.hover_hop();
+            self.start_micro("hop", 500);
         }
     }
 
@@ -1049,7 +1258,7 @@ impl PhysicsBody {
             MovementMode::Taskbar => {
                 self.y = bar_y;
                 self.vy = 0.0;
-                let speed = WALK_SPEED * (0.55 + wobble.abs() * 0.45);
+                let speed = self.walk_speed() * (0.55 + wobble.abs() * 0.45);
                 if self.vx.abs() < 12.0 {
                     self.vx = speed * self.walk_dir;
                 }
@@ -1063,16 +1272,16 @@ impl PhysicsBody {
                     self.x = min_x;
                     self.walk_dir = 1.0;
                     self.vx = speed;
-                    self.apply_edge_squash(true);
+                    self.apply_edge_squash(true, speed);
                 } else if self.x >= max_x {
                     self.x = max_x;
                     self.walk_dir = -1.0;
                     self.vx = -speed;
-                    self.apply_edge_squash(true);
+                    self.apply_edge_squash(true, speed);
                 }
             }
             MovementMode::Fullscreen => {
-                let speed = WALK_SPEED * 0.7;
+                let speed = self.walk_speed() * 0.7;
                 if self.vx.abs() < 10.0 && self.vy.abs() < 10.0 {
                     self.vx = speed * self.walk_dir;
                     self.vy = speed * 0.35;
@@ -1085,12 +1294,12 @@ impl PhysicsBody {
                     self.x = min_x;
                     self.vx = self.vx.abs();
                     self.walk_dir = 1.0;
-                    self.apply_edge_squash(true);
+                    self.apply_edge_squash(true, self.vx.abs());
                 } else if self.x >= max_x {
                     self.x = max_x;
                     self.vx = -self.vx.abs();
                     self.walk_dir = -1.0;
-                    self.apply_edge_squash(true);
+                    self.apply_edge_squash(true, self.vx.abs());
                 }
                 if self.y <= min_y {
                     self.y = min_y;
@@ -1105,8 +1314,8 @@ impl PhysicsBody {
     }
 
     /// Soft look-toward the cursor (eyes follow slightly).
-    pub fn update_cursor_awareness(&mut self, cursor_x: f64, cursor_y: f64) {
-        if matches!(self.state, HueState::Dragging) || self.is_dizzy() {
+    pub fn update_cursor_awareness(&mut self, cursor_x: f64, cursor_y: f64, dt: f64) {
+        if matches!(self.state, HueState::Dragging) || self.is_dizzy() || self.sleeping {
             return;
         }
         // Aim from approximate eye height inside the pet window.
@@ -1124,7 +1333,8 @@ impl PhysicsBody {
         let target_x = (dx / 110.0).clamp(-1.0, 1.0) * strength;
         let target_y = (dy / 130.0).clamp(-1.0, 1.0) * strength * 0.7;
         // Smooth so the gaze doesn't jitter.
-        let blend = if strength > 0.35 { 0.28 } else { 0.14 };
+        let per_frame: f64 = if strength > 0.35 { 0.28 } else { 0.14 };
+        let blend = 1.0 - (1.0 - per_frame).powf(dt * REF_HZ);
         self.gaze_x += (target_x - self.gaze_x) * blend;
         self.gaze_y += (target_y - self.gaze_y) * blend;
         // Face the user when close — do NOT flip walk_dir (mirrors eyes / glitches gaze).
@@ -1133,10 +1343,64 @@ impl PhysicsBody {
 
     /// Tiny hop when hovered / petted (frontend-driven via command).
     pub fn hover_hop(&mut self) {
-        if self.peeking {
+        if self.peeking || self.sleeping {
             return;
         }
         self.squash_x = 1.08;
         self.squash_y = 0.9;
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::config::MovementMode;
+
+    fn screen() -> WorkArea {
+        WorkArea { x: 0.0, y: 0.0, width: 1920.0, height: 1027.0 }
+    }
+
+    /// A violent flick toward the neighbouring monitor: HUE must stay (and bounce) on his own
+    /// screen at every frame, with a bounded squash, then settle.
+    #[test]
+    fn hard_throw_stays_on_its_screen() {
+        let area = screen();
+        let mut b = PhysicsBody::new(900.0, 400.0, PET_WINDOW, PET_WINDOW);
+        b.on_pointer(PointerPhase::Down, 980.0, 480.0, 1_000, &area, false, false);
+        let mut t = 1_000u128;
+        for i in 1..=6 {
+            t += 16;
+            b.on_pointer(PointerPhase::Move, 980.0 + 140.0 * i as f64, 480.0 - 30.0 * i as f64, t, &area, false, false);
+        }
+        b.on_pointer(PointerPhase::Up, 1820.0, 300.0, t + 4, &area, false, false);
+        assert_eq!(b.state, HueState::Tossed);
+
+        let mut min_sq = 1.0f64;
+        for _ in 0..(60 * 20) {
+            b.step(1.0 / 60.0, &area, MovementMode::Fullscreen, None);
+            assert!(b.x >= area.x && b.x + b.width <= area.x + area.width + 0.01, "x out: {}", b.x);
+            assert!(b.y >= area.y && b.y + b.height <= area.y + area.height + 0.01, "y out: {}", b.y);
+            min_sq = min_sq.min(b.squash_x).min(b.squash_y);
+        }
+        assert!(min_sq >= 1.0 - SQUASH_MAX - 1e-9, "squash too brutal: {min_sq}");
+        assert!(min_sq < 0.9, "a hard hit should still squash visibly: {min_sq}");
+        assert_ne!(b.state, HueState::Tossed, "should have settled after 20 s");
+    }
+
+    /// Damping is time-based: 30 Hz and 60 Hz ticks give the same decay after 0.1 s.
+    #[test]
+    fn squash_decay_is_framerate_independent() {
+        let area = screen();
+        let run = |hz: f64| {
+            let mut b = PhysicsBody::new(400.0, 300.0, PET_WINDOW, PET_WINDOW);
+            b.squash_x = 0.7; // Static + no cursor: nothing but the decay touches it
+            for _ in 0..(hz as usize / 10) {
+                b.step(1.0 / hz, &area, MovementMode::Static, None);
+            }
+            b.squash_x
+        };
+        let (a, c) = (run(30.0), run(60.0));
+        assert!(a > 0.8 && a < 0.95, "should be mid-recovery after 0.1 s: {a}");
+        assert!((a - c).abs() < 0.005, "30 Hz {a} vs 60 Hz {c}");
     }
 }

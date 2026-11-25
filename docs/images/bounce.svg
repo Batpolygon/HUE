@@ -1,0 +1,282 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="570" viewBox="0 0 1280 570">
+<style>
+  text { font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
+  .eye { transform-box: fill-box; transform-origin: 50% 50%; animation: blink 5.2s ease-in-out infinite; }
+  .led { animation: led 3.2s ease-in-out infinite; }
+  @keyframes blink { 0%, 90%, 100% { transform: scale(1, 1); } 93%, 95% { transform: scale(1, 0.15); } }
+  @keyframes led { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+</style>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0d1118"/><stop offset="1" stop-color="#161d2b"/></linearGradient>
+  <filter id="ds" x="-25%" y="-25%" width="150%" height="160%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.45"/></filter>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="18"/></filter>
+  
+</defs>
+<rect x="1" y="1" width="1278" height="568" rx="22" fill="url(#bg)" stroke="#263042" stroke-width="2"/>
+
+  <text x="640" y="52" text-anchor="middle" font-size="24" font-weight="700" fill="#f2f4f8">Rebonds V2 : écrasement selon la force du choc + ressort fluide</text>
+  <rect x="54" y="84" width="8" height="120" rx="3" fill="#2e3850"/><g transform="translate(130 190) scale(1.000 1.000) translate(-130 -190)"><svg x="70" y="101" width="120" height="120.0" viewBox="0 0 120 120" overflow="visible"><g filter="url(#ds)">
+  <defs>
+    <linearGradient id="bodyGrad-29" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2f3a"/>
+      <stop offset="1" stop-color="#1d2129"/>
+    </linearGradient>
+    <clipPath id="bodyClip-29"><rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0"/></clipPath>
+    <clipPath id="screenClip-29"><rect x="28" y="34" width="64" height="40" rx="8"/></clipPath>
+  </defs>
+  <g id="rig-29">
+  <g id="shell-29">
+    
+    
+    <g fill="#1d2129"><rect x="27.0" y="97.0" width="14.0" height="5.0" rx="2.0"/><rect x="79.0" y="97.0" width="14.0" height="5.0" rx="2.0"/></g>
+    <rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0" fill="url(#bodyGrad-29)" stroke="#3d4555" stroke-width="2.6"/>
+    <g clip-path="url(#bodyClip-29)" opacity="0.2"></g>
+    <line x1="30" y1="81.0" x2="46" y2="81.0" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="84.2" x2="46" y2="84.2" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="87.4" x2="46" y2="87.4" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="90.6" x2="46" y2="90.6" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><rect x="78" y="84" width="12" height="2.6" rx="1.3" fill="#ff8a1f" class="accent-strip"/><circle class="led" style="animation-delay:0.0s" cx="80.0" cy="91" r="1.4" fill="#ff8a1f"/>
+    <rect x="26" y="32" width="68" height="44" rx="9.5" fill="#1d2129"/>
+  </g>
+  <rect x="28" y="34" width="64" height="40" rx="8" fill="#0b0d12"/>
+  <g id="eyes-29" clip-path="url(#screenClip-29)">
+    <g id="eyes-normal-29">
+      <ellipse id="eye-l-29" class="eye" cx="46" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+      <ellipse id="eye-r-29" class="eye" cx="74" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+    </g>
+    
+    
+    
+    
+    
+    
+    
+    
+    <g id="blush-29" opacity="0">
+      <ellipse cx="36" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+      <ellipse cx="84" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+    </g>
+  </g>
+  <rect x="30" y="35.5" width="22" height="3" rx="1.5" fill="#ffffff" opacity="0.06" pointer-events="none"/>
+  
+  <g id="decor-29"></g>
+  </g>
+</g></svg></g><text x="130" y="232" text-anchor="middle" font-size="15" font-weight="600" fill="#c3cad6">impact</text><rect x="250" y="84" width="8" height="120" rx="3" fill="#2e3850"/><g transform="translate(326 190) scale(0.740 1.195) translate(-326 -190)"><svg x="266" y="101" width="120" height="120.0" viewBox="0 0 120 120" overflow="visible"><g filter="url(#ds)">
+  <defs>
+    <linearGradient id="bodyGrad-30" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2f3a"/>
+      <stop offset="1" stop-color="#1d2129"/>
+    </linearGradient>
+    <clipPath id="bodyClip-30"><rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0"/></clipPath>
+    <clipPath id="screenClip-30"><rect x="28" y="34" width="64" height="40" rx="8"/></clipPath>
+  </defs>
+  <g id="rig-30">
+  <g id="shell-30">
+    
+    
+    <g fill="#1d2129"><rect x="27.0" y="97.0" width="14.0" height="5.0" rx="2.0"/><rect x="79.0" y="97.0" width="14.0" height="5.0" rx="2.0"/></g>
+    <rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0" fill="url(#bodyGrad-30)" stroke="#3d4555" stroke-width="2.6"/>
+    <g clip-path="url(#bodyClip-30)" opacity="0.2"></g>
+    <line x1="30" y1="81.0" x2="46" y2="81.0" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="84.2" x2="46" y2="84.2" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="87.4" x2="46" y2="87.4" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="90.6" x2="46" y2="90.6" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><rect x="78" y="84" width="12" height="2.6" rx="1.3" fill="#ff8a1f" class="accent-strip"/><circle class="led" style="animation-delay:0.0s" cx="80.0" cy="91" r="1.4" fill="#ff8a1f"/>
+    <rect x="26" y="32" width="68" height="44" rx="9.5" fill="#1d2129"/>
+  </g>
+  <rect x="28" y="34" width="64" height="40" rx="8" fill="#0b0d12"/>
+  <g id="eyes-30" clip-path="url(#screenClip-30)">
+    <g id="eyes-normal-30">
+      <ellipse id="eye-l-30" class="eye" cx="46" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+      <ellipse id="eye-r-30" class="eye" cx="74" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+    </g>
+    
+    
+    
+    
+    
+    
+    
+    
+    <g id="blush-30" opacity="0">
+      <ellipse cx="36" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+      <ellipse cx="84" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+    </g>
+  </g>
+  <rect x="30" y="35.5" width="22" height="3" rx="1.5" fill="#ffffff" opacity="0.06" pointer-events="none"/>
+  
+  <g id="decor-30"></g>
+  </g>
+</g></svg></g><text x="326" y="232" text-anchor="middle" font-size="15" font-weight="600" fill="#c3cad6">écrasé</text><rect x="446" y="84" width="8" height="120" rx="3" fill="#2e3850"/><g transform="translate(522 190) scale(0.882 1.089) translate(-522 -190)"><svg x="462" y="101" width="120" height="120.0" viewBox="0 0 120 120" overflow="visible"><g filter="url(#ds)">
+  <defs>
+    <linearGradient id="bodyGrad-31" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2f3a"/>
+      <stop offset="1" stop-color="#1d2129"/>
+    </linearGradient>
+    <clipPath id="bodyClip-31"><rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0"/></clipPath>
+    <clipPath id="screenClip-31"><rect x="28" y="34" width="64" height="40" rx="8"/></clipPath>
+  </defs>
+  <g id="rig-31">
+  <g id="shell-31">
+    
+    
+    <g fill="#1d2129"><rect x="27.0" y="97.0" width="14.0" height="5.0" rx="2.0"/><rect x="79.0" y="97.0" width="14.0" height="5.0" rx="2.0"/></g>
+    <rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0" fill="url(#bodyGrad-31)" stroke="#3d4555" stroke-width="2.6"/>
+    <g clip-path="url(#bodyClip-31)" opacity="0.2"></g>
+    <line x1="30" y1="81.0" x2="46" y2="81.0" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="84.2" x2="46" y2="84.2" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="87.4" x2="46" y2="87.4" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="90.6" x2="46" y2="90.6" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><rect x="78" y="84" width="12" height="2.6" rx="1.3" fill="#ff8a1f" class="accent-strip"/><circle class="led" style="animation-delay:0.0s" cx="80.0" cy="91" r="1.4" fill="#ff8a1f"/>
+    <rect x="26" y="32" width="68" height="44" rx="9.5" fill="#1d2129"/>
+  </g>
+  <rect x="28" y="34" width="64" height="40" rx="8" fill="#0b0d12"/>
+  <g id="eyes-31" clip-path="url(#screenClip-31)">
+    <g id="eyes-normal-31">
+      <ellipse id="eye-l-31" class="eye" cx="46" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+      <ellipse id="eye-r-31" class="eye" cx="74" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+    </g>
+    
+    
+    
+    
+    
+    
+    
+    
+    <g id="blush-31" opacity="0">
+      <ellipse cx="36" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+      <ellipse cx="84" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+    </g>
+  </g>
+  <rect x="30" y="35.5" width="22" height="3" rx="1.5" fill="#ffffff" opacity="0.06" pointer-events="none"/>
+  
+  <g id="decor-31"></g>
+  </g>
+</g></svg></g><text x="522" y="232" text-anchor="middle" font-size="15" font-weight="600" fill="#c3cad6">il se détend</text><rect x="642" y="84" width="8" height="120" rx="3" fill="#2e3850"/><g transform="translate(718 190) scale(1.026 0.980) translate(-718 -190)"><svg x="658" y="101" width="120" height="120.0" viewBox="0 0 120 120" overflow="visible"><g filter="url(#ds)">
+  <defs>
+    <linearGradient id="bodyGrad-32" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2f3a"/>
+      <stop offset="1" stop-color="#1d2129"/>
+    </linearGradient>
+    <clipPath id="bodyClip-32"><rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0"/></clipPath>
+    <clipPath id="screenClip-32"><rect x="28" y="34" width="64" height="40" rx="8"/></clipPath>
+  </defs>
+  <g id="rig-32">
+  <g id="shell-32">
+    
+    
+    <g fill="#1d2129"><rect x="27.0" y="97.0" width="14.0" height="5.0" rx="2.0"/><rect x="79.0" y="97.0" width="14.0" height="5.0" rx="2.0"/></g>
+    <rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0" fill="url(#bodyGrad-32)" stroke="#3d4555" stroke-width="2.6"/>
+    <g clip-path="url(#bodyClip-32)" opacity="0.2"></g>
+    <line x1="30" y1="81.0" x2="46" y2="81.0" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="84.2" x2="46" y2="84.2" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="87.4" x2="46" y2="87.4" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="90.6" x2="46" y2="90.6" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><rect x="78" y="84" width="12" height="2.6" rx="1.3" fill="#ff8a1f" class="accent-strip"/><circle class="led" style="animation-delay:0.0s" cx="80.0" cy="91" r="1.4" fill="#ff8a1f"/>
+    <rect x="26" y="32" width="68" height="44" rx="9.5" fill="#1d2129"/>
+  </g>
+  <rect x="28" y="34" width="64" height="40" rx="8" fill="#0b0d12"/>
+  <g id="eyes-32" clip-path="url(#screenClip-32)">
+    <g id="eyes-normal-32">
+      <ellipse id="eye-l-32" class="eye" cx="46" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+      <ellipse id="eye-r-32" class="eye" cx="74" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+    </g>
+    
+    
+    
+    
+    
+    
+    
+    
+    <g id="blush-32" opacity="0">
+      <ellipse cx="36" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+      <ellipse cx="84" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+    </g>
+  </g>
+  <rect x="30" y="35.5" width="22" height="3" rx="1.5" fill="#ffffff" opacity="0.06" pointer-events="none"/>
+  
+  <g id="decor-32"></g>
+  </g>
+</g></svg></g><text x="718" y="232" text-anchor="middle" font-size="15" font-weight="600" fill="#c3cad6">léger rebond</text><rect x="838" y="84" width="8" height="120" rx="3" fill="#2e3850"/><g transform="translate(914 190) scale(0.972 1.021) translate(-914 -190)"><svg x="854" y="101" width="120" height="120.0" viewBox="0 0 120 120" overflow="visible"><g filter="url(#ds)">
+  <defs>
+    <linearGradient id="bodyGrad-33" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2f3a"/>
+      <stop offset="1" stop-color="#1d2129"/>
+    </linearGradient>
+    <clipPath id="bodyClip-33"><rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0"/></clipPath>
+    <clipPath id="screenClip-33"><rect x="28" y="34" width="64" height="40" rx="8"/></clipPath>
+  </defs>
+  <g id="rig-33">
+  <g id="shell-33">
+    
+    
+    <g fill="#1d2129"><rect x="27.0" y="97.0" width="14.0" height="5.0" rx="2.0"/><rect x="79.0" y="97.0" width="14.0" height="5.0" rx="2.0"/></g>
+    <rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0" fill="url(#bodyGrad-33)" stroke="#3d4555" stroke-width="2.6"/>
+    <g clip-path="url(#bodyClip-33)" opacity="0.2"></g>
+    <line x1="30" y1="81.0" x2="46" y2="81.0" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="84.2" x2="46" y2="84.2" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="87.4" x2="46" y2="87.4" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="90.6" x2="46" y2="90.6" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><rect x="78" y="84" width="12" height="2.6" rx="1.3" fill="#ff8a1f" class="accent-strip"/><circle class="led" style="animation-delay:0.0s" cx="80.0" cy="91" r="1.4" fill="#ff8a1f"/>
+    <rect x="26" y="32" width="68" height="44" rx="9.5" fill="#1d2129"/>
+  </g>
+  <rect x="28" y="34" width="64" height="40" rx="8" fill="#0b0d12"/>
+  <g id="eyes-33" clip-path="url(#screenClip-33)">
+    <g id="eyes-normal-33">
+      <ellipse id="eye-l-33" class="eye" cx="46" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+      <ellipse id="eye-r-33" class="eye" cx="74" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+    </g>
+    
+    
+    
+    
+    
+    
+    
+    
+    <g id="blush-33" opacity="0">
+      <ellipse cx="36" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+      <ellipse cx="84" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+    </g>
+  </g>
+  <rect x="30" y="35.5" width="22" height="3" rx="1.5" fill="#ffffff" opacity="0.06" pointer-events="none"/>
+  
+  <g id="decor-33"></g>
+  </g>
+</g></svg></g><text x="914" y="232" text-anchor="middle" font-size="15" font-weight="600" fill="#c3cad6">effet gelée</text><rect x="1034" y="84" width="8" height="120" rx="3" fill="#2e3850"/><g transform="translate(1110 190) scale(0.998 1.002) translate(-1110 -190)"><svg x="1050" y="101" width="120" height="120.0" viewBox="0 0 120 120" overflow="visible"><g filter="url(#ds)">
+  <defs>
+    <linearGradient id="bodyGrad-34" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2f3a"/>
+      <stop offset="1" stop-color="#1d2129"/>
+    </linearGradient>
+    <clipPath id="bodyClip-34"><rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0"/></clipPath>
+    <clipPath id="screenClip-34"><rect x="28" y="34" width="64" height="40" rx="8"/></clipPath>
+  </defs>
+  <g id="rig-34">
+  <g id="shell-34">
+    
+    
+    <g fill="#1d2129"><rect x="27.0" y="97.0" width="14.0" height="5.0" rx="2.0"/><rect x="79.0" y="97.0" width="14.0" height="5.0" rx="2.0"/></g>
+    <rect x="18.0" y="22.0" width="84.0" height="76.0" rx="16.0" fill="url(#bodyGrad-34)" stroke="#3d4555" stroke-width="2.6"/>
+    <g clip-path="url(#bodyClip-34)" opacity="0.2"></g>
+    <line x1="30" y1="81.0" x2="46" y2="81.0" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="84.2" x2="46" y2="84.2" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="87.4" x2="46" y2="87.4" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><line x1="30" y1="90.6" x2="46" y2="90.6" stroke="#1d2129" stroke-width="1.4" stroke-linecap="round"/><rect x="78" y="84" width="12" height="2.6" rx="1.3" fill="#ff8a1f" class="accent-strip"/><circle class="led" style="animation-delay:0.0s" cx="80.0" cy="91" r="1.4" fill="#ff8a1f"/>
+    <rect x="26" y="32" width="68" height="44" rx="9.5" fill="#1d2129"/>
+  </g>
+  <rect x="28" y="34" width="64" height="40" rx="8" fill="#0b0d12"/>
+  <g id="eyes-34" clip-path="url(#screenClip-34)">
+    <g id="eyes-normal-34">
+      <ellipse id="eye-l-34" class="eye" cx="46" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+      <ellipse id="eye-r-34" class="eye" cx="74" cy="54" rx="8" ry="10" fill="#ff8a1f"/>
+    </g>
+    
+    
+    
+    
+    
+    
+    
+    
+    <g id="blush-34" opacity="0">
+      <ellipse cx="36" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+      <ellipse cx="84" cy="67" rx="6" ry="2.6" fill="#ff6fa1"/>
+    </g>
+  </g>
+  <rect x="30" y="35.5" width="22" height="3" rx="1.5" fill="#ffffff" opacity="0.06" pointer-events="none"/>
+  
+  <g id="decor-34"></g>
+  </g>
+</g></svg></g><text x="1110" y="232" text-anchor="middle" font-size="15" font-weight="600" fill="#c3cad6">stable</text>
+  <line x1="150" y1="503.0769230769231" x2="1180" y2="503.0769230769231" stroke="#263042" stroke-width="1" stroke-dasharray="3 5"/><text x="138" y="508.0769230769231" text-anchor="end" font-size="13" fill="#8a95a8">0,5</text><line x1="150" y1="435.3846153846154" x2="1180" y2="435.3846153846154" stroke="#263042" stroke-width="1" stroke-dasharray="3 5"/><text x="138" y="440.3846153846154" text-anchor="end" font-size="13" fill="#8a95a8">0,7</text><line x1="150" y1="367.69230769230774" x2="1180" y2="367.69230769230774" stroke="#263042" stroke-width="1" stroke-dasharray="3 5"/><text x="138" y="372.69230769230774" text-anchor="end" font-size="13" fill="#8a95a8">0,9</text><line x1="150" y1="333.84615384615387" x2="1180" y2="333.84615384615387" stroke="#263042" stroke-width="1" /><text x="138" y="338.84615384615387" text-anchor="end" font-size="13" fill="#8a95a8">1,0</text><text x="150" y="544" text-anchor="middle" font-size="13" fill="#8a95a8">0 s</text><text x="407.5" y="544" text-anchor="middle" font-size="13" fill="#8a95a8">0,25 s</text><text x="665" y="544" text-anchor="middle" font-size="13" fill="#8a95a8">0,5 s</text><text x="922.5" y="544" text-anchor="middle" font-size="13" fill="#8a95a8">0,75 s</text><text x="1180" y="544" text-anchor="middle" font-size="13" fill="#8a95a8">1 s</text>
+  <text x="80" y="410" font-size="13" fill="#8a95a8" transform="rotate(-90 80 410)" text-anchor="middle">largeur (× normale)</text>
+  <path d="M150 496.3076923076923 H184.3 V483.3 H218.7 V471.4 H253.0 V460.4 H287.3 V450.2 H321.7 V440.9 H356.0 V432.4 H390.3 V424.5 H424.7 V417.2 H459.0 V410.6 H493.3 V404.4 H527.7 V398.8 H562.0 V393.6 H596.3 V388.8 H630.7 V384.4 H665.0 V380.4 H699.3 V376.6 H733.7 V373.2 H768.0 V370.1 H802.3 V367.2 H836.7 V364.5 H871.0 V362.0 H905.3 V359.8 H939.7 V357.7 H974.0 V355.8 H1008.3 V354.1 H1042.7 V352.4 H1077.0 V350.9 H1111.3 V349.6 H1145.7 V348.3 H1180.0 V347.2 H1180" fill="none" stroke="#8a95a8" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M150.0 333.8 L167.2 347.5 L184.3 370.0 L201.5 392.2 L218.7 411.0 L235.8 421.7 L253.0 424.5 L270.2 418.7 L287.3 407.0 L304.5 391.0 L321.7 373.8 L338.8 357.3 L356.0 343.6 L373.2 333.3 L390.3 327.3 L407.5 324.9 L424.7 325.7 L441.8 328.5 L459.0 332.4 L476.2 336.4 L493.3 339.9 L510.5 342.3 L527.7 343.4 L544.8 343.3 L562.0 342.2 L579.2 340.4 L596.3 338.3 L613.5 336.2 L630.7 334.4 L647.8 333.1 L665.0 332.3 L682.2 332.0 L699.3 332.1 L716.5 332.5 L733.7 333.1 L750.8 333.7 L768.0 334.3 L785.2 334.7 L802.3 334.9 L819.5 335.0 L836.7 334.9 L853.8 334.7 L871.0 334.4 L888.2 334.1 L905.3 333.9 L922.5 333.7 L939.7 333.6 L956.8 333.5 L974.0 333.6 L991.2 333.6 L1008.3 333.7 L1025.5 333.8 L1042.7 333.9 L1059.8 333.9 L1077.0 334.0 L1094.2 334.0 L1111.3 334.0 L1128.5 334.0 L1145.7 333.9 L1162.8 333.9 L1180.0 333.9 L1180.0 333.8" fill="none" stroke="#ff8a1f" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+  <g font-size="14.5">
+    <rect x="726.8000000000001" y="410.0769230769231" width="16" height="4" rx="2" fill="#8a95a8"/>
+    <text x="750.8000000000001" y="415.0769230769231" fill="#c3cad6">V1 : toujours 0,52 × 1,42, puis retour saccadé (30 Hz)</text>
+    <rect x="726.8000000000001" y="437.1538461538462" width="16" height="4" rx="2" fill="#ff8a1f"/>
+    <text x="750.8000000000001" y="442.1538461538462" fill="#c3cad6">V2 : proportionnel au choc, ressort amorti (60 FPS)</text>
+  </g>
+  
+</svg>

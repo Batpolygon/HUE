@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, mkdirSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -27,9 +27,13 @@ if (!srcDir) {
   process.exit(1);
 }
 
+const { version } = JSON.parse(readFileSync(path.join(root, "src-tauri", "tauri.conf.json"), "utf8"));
 copyFileSync(path.join(srcDir, "hue.exe"), path.join(releaseDir, "HUE.exe"));
-const setup = path.join(srcDir, "bundle", "nsis", "HUE_1.0.0_x64-setup.exe");
+const setupName = `HUE_${version}_x64-setup.exe`;
+const setup = path.join(srcDir, "bundle", "nsis", setupName);
 if (existsSync(setup)) {
-  copyFileSync(setup, path.join(releaseDir, "HUE_1.0.0_x64-setup.exe"));
+  copyFileSync(setup, path.join(releaseDir, setupName));
+} else {
+  console.warn(`copy-release: ${setupName} not found (installer skipped)`);
 }
 console.log(`copied from ${srcDir} → release/`);
