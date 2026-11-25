@@ -161,10 +161,9 @@ Quand il est **rangé** dans le coin de l'écran, son écran fait défiler l'heu
 
 ## 📥 Télécharger
 
-Récupère la dernière version sur la [page des releases](https://github.com/Batpolygon/HUE/releases). Deux choix :
+Récupère la dernière version sur la [page des releases](https://github.com/Batpolygon/HUE/releases). :
 
 - **`HUE_V2.exe`** : la version portable. Lance-la directement, sans installation.
-- **`HUE_2.0.0_x64-setup.exe`** : l'installeur, qui crée les raccourcis et la désinstallation.
 
 L'icône dans la zone de notification permet d'**afficher**, **ranger**, **redémarrer** ou **quitter** HUE.
 
